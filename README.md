@@ -1,2 +1,2 @@
-# clone-tabnews
-estudos do curso.dev
+# uor love story
+Um site sobre um relacionamento 
