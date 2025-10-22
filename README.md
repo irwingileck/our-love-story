@@ -1,2 +1,2 @@
-# our-love-story
-Cofre sobre a nossa história
+# clone-tabnews
+estudos do curso.dev
