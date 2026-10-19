@@ -164,3 +164,48 @@ test('T02 — dark mode works', async ({ page }) => {
     await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(236, 253, 245)');
   });
 });
+
+test('T03 — illustration follows the theme and keeps its animations', async ({ page }) => {
+  const ids = ['diamond', 'mountain', 'cloud_inf', 'cloud_sup', 'sun', 'wind_sup_dir', 'wind_sup_esq', 'wind_inf'];
+  const palette = () => page.locator('.scene path').evaluateAll((paths) => paths.map((path) => getComputedStyle(path).fill));
+  await page.goto('/');
+  await expect(toggle(page)).toHaveAttribute('aria-pressed', 'false');
+  const lightPalette = await palette();
+
+  await test.step('dark theme recolors every illustration element in soft green', async () => {
+    await toggle(page).click();
+    await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true');
+    for (const id of ids) {
+      const paths = page.locator(`#${id} path`);
+      expect(await paths.count()).toBeGreaterThan(0);
+      for (const path of await paths.all()) {
+        await expect(path).toHaveCSS('fill', 'rgb(121, 169, 145)');
+      }
+      await expect(page.locator(`#${id}`)).not.toHaveCSS('animation-name', 'none');
+    }
+    await expect(page.locator('.scene')).toHaveCSS('filter', 'none');
+  });
+
+  await test.step('animation advances in dark mode without replacing the scene', async () => {
+    const cloud = page.locator('#cloud_inf');
+    await expect.poll(() => cloud.evaluate((element) => element.getAnimations().some((animation) =>
+      animation.effect.getTiming().iterations === Infinity && animation.effect.getComputedTiming().progress !== null
+    )), { timeout: 10000 }).toBe(true);
+    const before = await cloud.evaluate((element) => getComputedStyle(element).transform);
+    await expect.poll(() => cloud.evaluate((element) => getComputedStyle(element).transform)).not.toBe(before);
+  });
+
+  await test.step('saved dark recolors the illustration after reload', async () => {
+    const darkPalette = await palette();
+    await page.reload();
+    await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true');
+    expect(await palette()).toEqual(darkPalette);
+  });
+
+  await test.step('returning to light restores every original path color', async () => {
+    await toggle(page).click();
+    await expect(toggle(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(await palette()).toEqual(lightPalette);
+    await expect(page.locator('.scene')).toHaveCSS('filter', 'none');
+  });
+});
