@@ -1,4 +1,12 @@
-import Cloud from '../assets/nuvem_inf.svg';
+import SerraMountain from '../assets/landscapes/serra/mountain.svg';
+import SerraClouds from '../assets/landscapes/serra/clouds.svg';
+import SerraWind from '../assets/landscapes/serra/wind.svg';
+import BrisaMountain from '../assets/landscapes/brisa/mountain.svg';
+import BrisaClouds from '../assets/landscapes/brisa/clouds.svg';
+import BrisaWind from '../assets/landscapes/brisa/wind.svg';
+import EstelarMountain from '../assets/landscapes/estelar/mountain.svg';
+import EstelarClouds from '../assets/landscapes/estelar/clouds.svg';
+import EstelarWind from '../assets/landscapes/estelar/wind.svg';
 import styles from './Landscape.module.css';
 
 // Drawn in local side coordinates: the two banks never stretch across the message.
@@ -42,17 +50,14 @@ const estelarMobile = [
 const skyDust = [[8, 12, true], [17, 20, false], [5, 32, false], [22, 39, true], [10, 58, false], [4, 80, true], [93, 12, false], [84, 22, true], [96, 35, false], [79, 47, false], [91, 62, true], [97, 84, false], [20, 91, false]];
 const dust = [[7, 10, true], [19, 25, false], [4, 48, false], [12, 69, true], [23, 91, false], [94, 17, true], [86, 40, false], [96, 65, false], [86, 88, true]];
 
-function MountainDrawing() {
-  return (
-    <g className={styles.mountainDrawing}>
-      <path d="M-30 910 40 820 67 832 155 681 232 792 258 782 366 925 M67 832 155 681 134 771 183 748 232 792 M155 681 179 779 212 831 M134 771 100 841 M183 748 244 860 M40 820 81 879" />
-      {Array.from({ length: 13 }, (_, i) => <path key={i} d={`M${147 - i * 4} ${714 + i * 10} l${-42 - i * 2} ${69 - i * 2}`} />)}
-      <path d="M-25 930 Q65 869 150 908 T352 934 M-30 942 Q60 880 150 920 T376 948" />
-    </g>
-  );
-}
+const kits = {
+  serra: { Mountain: SerraMountain, Clouds: SerraClouds, Wind: SerraWind },
+  brisa: { Mountain: BrisaMountain, Clouds: BrisaClouds, Wind: BrisaWind },
+  estelar: { Mountain: EstelarMountain, Clouds: EstelarClouds, Wind: EstelarWind },
+};
 
 export default function Landscape({ variant }) {
+  const { Mountain, Clouds, Wind } = kits[variant];
   const flowing = variant === 'brisa';
   const celestial = variant === 'estelar';
   const desktopRidges = celestial ? estelarDesktop : flowing ? brisaDesktop : serraDesktop;
@@ -70,37 +75,13 @@ export default function Landscape({ variant }) {
         </div>)}
       </div>
       <div data-layer="ornaments" className={`${styles.layer} ${styles.ornaments}`}>
-        {['left', 'right'].map((side) => <svg key={side} className={`landscape-desktop ${styles.bank} ${styles[side]}`} viewBox="0 0 500 1000" preserveAspectRatio="xMinYMid meet" focusable="false">
-          <g transform={celestial ? 'translate(0 80)' : flowing ? (side === 'left' ? 'translate(-35 90)' : 'translate(5 -120) scale(.9)') : undefined}><MountainDrawing /></g>
-          <Cloud focusable="false" data-decorative-cloud className={styles.cloud} x={flowing ? '-120' : '-60'} y={flowing && side === 'right' ? '680' : '864'} width="290" height="146" />
-          <Cloud focusable="false" data-decorative-cloud className={`${styles.cloud} ${styles.highCloud}`} x="-100" y={celestial ? '510' : flowing ? '320' : '70'} width="290" height="146" />
-          {celestial && <g className={styles.skyArc}>
-            <path d="M-70 345 A190 190 0 0 1 290 240 M-62 352 A182 182 0 0 1 273 238 M27 180 A70 70 0 0 0 123 257 A60 60 0 0 1 27 180" />
-            <path d="M18 389 93 350 153 398 231 365" strokeDasharray="2 7" />
-            {[ [18,389], [93,350], [153,398], [231,365] ].map(([x,y]) => <circle key={x} cx={x} cy={y} r="2" />)}
-          </g>}
-          <g className={styles.wind}>
-            {flowing ? <>
-              <path d="M-100 180 C36 88 110 290 260 213 S395 180 470 234 M-100 194 C36 102 110 304 260 227 S395 194 470 248 M-100 208 C36 116 110 318 260 241 S395 208 470 262" />
-              <path d="M-50 620 C54 486 151 738 303 645 M-50 635 C54 501 151 753 303 660" />
-            </> : <>
-              <path d="M-80 272 Q40 220 145 268 T352 290 M-80 284 Q40 233 145 280 T338 302" />
-              <path d="M-80 612 Q10 564 76 603 T243 642 M-80 624 Q10 576 76 615 T225 653" />
-            </>}
-          </g>
-        </svg>)}
-        {['left', 'right'].map((side) => <svg key={side} className={`landscape-mobile ${styles.bank} ${styles[side]}`} viewBox="0 0 220 1000" preserveAspectRatio="none" focusable="false">
-          <svg data-corner-mountain x="-35" y={flowing && side === 'right' ? '770' : '820'} width="170" height="170" viewBox="-30 660 420 340" focusable="false"><MountainDrawing /></svg>
-          <Cloud focusable="false" data-decorative-cloud className={styles.cloud} x="-65" y="910" width="175" height="88" />
-          <Cloud focusable="false" data-decorative-cloud className={`${styles.cloud} ${styles.highCloud}`} x="-95" y={celestial ? '570' : flowing ? '370' : '105'} width="170" height="86" />
-          <g className={styles.wind}>
-            <path d={flowing ? 'M-30 245 Q24 210 60 249 T166 265 M-30 259 Q24 224 60 263 T156 279 M-30 625 Q20 583 61 625 T170 651' : 'M-30 315 Q30 284 73 310 T167 326 M-30 328 Q30 297 73 323 T157 339 M-30 715 Q30 676 66 707 T155 730'} />
-          </g>
-          {celestial && <g className={styles.skyArc}>
-            <path d="M-45 235 A95 95 0 0 1 125 175 M-40 242 A90 90 0 0 1 115 179 M5 341 54 316 93 352" strokeDasharray="2 6" />
-            <circle cx="5" cy="341" r="2" /><circle cx="54" cy="316" r="2" /><circle cx="93" cy="352" r="2" />
-          </g>}
-        </svg>)}
+        {['desktop', 'mobile'].map((size) => ['left', 'right'].map((side) => (
+          <div key={`${size}-${side}`} className={`landscape-${size} ${styles.artBank} ${side === 'left' ? styles.artLeft : styles.artRight}`}>
+            <Mountain data-artwork={`${variant}-mountain`} data-corner-mountain className={styles.peak} focusable="false" />
+            <Clouds data-artwork={`${variant}-clouds`} data-decorative-cloud className={styles.cloud} focusable="false" />
+            <Wind data-artwork={`${variant}-wind`} className={styles.wind} focusable="false" />
+          </div>
+        )))}
       </div>
       <div data-layer="particles" className={`${styles.layer} ${styles.particles}`}>
         {(celestial ? skyDust : dust).map(([x, y, star], index) => <span data-particle key={index} className={`${styles.particle} ${star ? styles.star : styles.dot}`} style={{ left: `${x}%`, top: `${y}%`, '--drift-duration': `${18 + index * 3}s`, '--drift-delay': `${-index * 2}s` }}>

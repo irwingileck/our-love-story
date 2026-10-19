@@ -4,11 +4,12 @@ Esta lista deve crescer junto com o produto. **Toda nova funcionalidade deve
 acrescentar um cenário principal com ID sequencial (T03, T04, …), sua cobertura e
 comando de execução**, sem remover ou enfraquecer os cenários existentes. Detalhes
 adicionais de uma funcionalidade existente entram como subpassos (`test.step`) no
-seu cenário. Hoje existem **T01, T02, T03 e T04**; T01–T03 rodam em
-`desktop` e `mobile` (seis execuções). T04 é parametrizado nas três paisagens
-nesses mesmos projetos (mais seis), totalizando **12 execuções** por suíte.
+seu cenário. Hoje existem **T01, T02, T03, T04 e T05**; T01–T03 rodam em
+`desktop` e `mobile` (seis execuções). T04 e T05 são parametrizados nas três paisagens
+nesses mesmos projetos (mais seis cada), totalizando **18 execuções** por suíte.
 
-Arquivo executável: `tests/theme.spec.js`. Configuração: `playwright.config.js`.
+Arquivos executáveis: `tests/theme.spec.js`, `tests/landscapes.spec.js` e
+`tests/artwork.spec.js`. Configuração: `playwright.config.js`.
 O projeto mobile usa emulação Pixel 5 no Chromium, não um aparelho físico nem WebKit.
 
 ## T01 — Site abre e as animações existentes continuam funcionando
@@ -231,3 +232,68 @@ Pasta: `$TMPDIR/our-love-story-landscapes/` (fora do Git; temporária).
   estudos visuais, não uma barreira de acesso. Nenhum push, deploy ou autenticação.
 
 Arquitetura, rotas e tokens: `docs/PROPOSTAS.md`.
+
+
+## T05 — Kits originais de gravura, transparentes e adaptados à composição
+
+Arquivo: `tests/artwork.spec.js`. Parametrizado em Serra, Brisa e Estelar, em
+`desktop` e `mobile`: **seis execuções adicionais**, **18 por suíte cumulativa**.
+T01–T04 e suas asserções não foram editados, removidos ou enfraquecidos.
+
+1. Cada rota renderiza duas instâncias visíveis de cada original (`mountain`,
+   `clouds`, `wind`), com `data-artwork="{variante}-{tipo}"`; não basta declarar imports.
+2. Os nove SVGs em `assets/landscapes/` são byte a byte os mestres originais
+   revisados (SHA-256 fixado no teste), distintos da nuvem central `nuvem_inf.svg`.
+3. XML válido, viewBox próprio, raiz `fill="none"`, tintas somente `currentColor`
+   ou `none`; nenhum fundo retangular, raster, script, estilo, recurso externo ou
+   referência `<use>`. SVG renderizado transparente e `focusable="false"`.
+4. Nenhuma importação da nuvem central, componente `MountainDrawing` ou arco
+   procedural antigo permanece em `Landscape.jsx`.
+5. Proporções nativas preservadas, sem esticar; contornos dentro da largura da
+   página, tamanhos legíveis, alturas de nuvem deliberadamente desencontradas,
+   canal central livre no desktop e opacidade efetiva entre .45 e .80.
+6. O traço real da montanha muda para `rgb(154, 183, 165)` no escuro e volta à
+   cor clara; todos os originais acompanham o token e continuam transparentes.
+7. Nuvens mobile têm largura >=39% da tela (a montanha continua <=32%, conforme
+   T04); ficam junto ao pé afunilado do losango. Ventos ficam acima dos grupos
+   centrais, não atrás das nuvens originais. A posição acompanha a largura da cena,
+   não a altura do conteúdo textual.
+
+```bash
+npm test -- --grep T05
+npm test
+NEXT_TELEMETRY_DISABLED=1 npm run build
+PLAYWRIGHT_TEST_PRODUCTION=1 npm test
+npm run security:audit
+```
+
+### Iteração 2 — evidências reais
+
+Pasta: `$TMPDIR/our-love-story-art-v2/integration/` (temporária, fora do Git).
+
+- `01-kit-red.log`: **6 falhas funcionais** antes de copiar SVGs ou editar produção;
+  nenhum marcador de arte original existia. `01-kit-green.log`: **18/18** após a
+  integração mínima dos nove mestres e retirada dos ornamentos antigos.
+- `02-composition-red.log`: **6 falhas** por nuvens sem composição assimétrica;
+  `02-composition-green.log`: **18/18** após composição e tinta subordinada ao centro.
+- Revisão visual encontrou nuvens mobile pequenas e ventos sobrepostos à cena.
+  `03-mobile-readability-red.log`: **3 falhas** pela largura insuficiente, antes da
+  correção; `03-mobile-readability-green.log`: **18/18 dev, 57,3 s** após ampliar e
+  reposicionar apenas os ornamentos. As primeiras imagens ficam em
+  `before-mobile-refinement/`, sem ocultar a revisão intermediária.
+- `production-final.log`: **18/18 produção local, 43,4 s**, Chromium real/Node 24.
+  `build.log`: build estático status 0; `audit.log`: produção e árvore completa com
+  **zero vulnerabilidades conhecidas** na consulta. Nenhuma dependência nova.
+- `preservation.json` e `verify-preservation.py`: **seis arrays de silhueta idênticos**,
+  markup da camada `mountains` idêntico, **27 regras CSS dos planos preservadas
+  literalmente** e **nove mestres byte a byte iguais** aos SVGs revisados.
+- `default-pixel-comparison.json`: `/` comparada com a entrega anterior em quatro
+  combinações tamanho/tema, **zero pixels alterados**, nenhuma máscara necessária;
+  animações sincronizadas e contador dinâmico oculto em ambos os lados.
+- `iteration2-{serra,brisa,estelar}-{desktop,mobile}-{light,dark}.png`: **12 capturas**
+  finais reais do build (viewports 1440 × 960 e 393 × 851; PNGs desktop
+  1440 × 960 e mobile 393 × 858 por captura de página inteira),
+  inspecionadas visualmente; `capture.cjs`/`capture.log` reproduzem a coleta.
+- Limites: Chromium e Pixel 5 emulado, não Safari/aparelho físico. Gravura vetorial,
+  sem reprodução pixel a pixel da textura aquarelada. Nenhum commit, push, PR,
+  deploy, merge ou mudança em produção nesta iteração.

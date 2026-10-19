@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 210" fill="none" aria-hidden="true">
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <!-- A single drawn bank, rising into three differently weighted scrolls. -->
+    <path stroke-width="2.7" d="M24 146C57 150 83 144 109 128C125 118 132 109 146 105C128 89 130 66 146 54C162 41 185 44 196 55C199 29 222 18 245 23C272 29 285 48 281 70C301 61 320 65 333 78C344 89 345 103 340 115C363 96 385 83 410 88C430 92 442 108 441 124C457 115 474 119 485 132C507 155 548 158 613 137C579 167 541 175 507 166C484 160 469 158 453 164C422 177 391 173 365 161C343 151 321 151 298 160C261 175 229 169 201 153C183 143 169 140 148 146C109 160 67 164 24 146Z"/>
+    <!-- The tallest curl turns inward, then releases into the bank's long current. -->
+    <path stroke-width="2.1" d="M196 55C194 75 207 91 224 93C243 96 259 83 257 68C255 55 241 49 231 55C222 61 225 74 234 75C240 76 243 72 242 68"/>
+    <path stroke-width="1.25" d="M209 43C223 28 249 34 261 48C275 65 272 89 255 102C239 114 218 113 199 108C180 102 164 108 151 119"/>
+    <!-- Left eddy is shallower and opens into a taper, not a circular scallop. -->
+    <path stroke-width="2" d="M146 105C158 113 175 109 182 97C189 85 184 71 174 68C163 63 153 71 155 80C156 87 165 90 169 84"/>
+    <path stroke-width="1.2" d="M62 146C96 148 115 131 134 124C157 114 176 124 195 133C216 144 234 146 254 141"/>
+    <!-- Middle shoulder folds back under the large scroll. -->
+    <path stroke-width="2" d="M281 70C295 79 302 94 297 107C292 121 276 128 264 122C254 117 254 104 262 100C270 96 277 101 275 108"/>
+    <path stroke-width="1.3" d="M319 85C332 101 322 126 303 135C285 144 273 137 254 141C237 145 228 154 210 154"/>
+    <!-- Low eastern scroll; a long tail carries the motion out of the bank. -->
+    <path stroke-width="2.15" d="M340 115C327 132 342 150 362 148C380 147 390 135 386 123C383 112 370 108 362 115C355 122 360 131 367 130C372 130 374 127 372 124"/>
+    <path stroke-width="1.25" d="M384 99C408 96 427 114 423 132C419 149 399 158 380 155"/>
+    <path stroke-width="1.9" d="M441 124C440 140 451 148 466 146C477 145 485 140 485 132"/>
+    <path stroke-width="1.15" d="M457 158C477 147 493 157 517 161C542 165 563 161 581 153M85 157C113 163 137 157 158 153M294 165C317 157 336 156 353 162"/>
+  </g>
+  <!-- These small filled wedges give the unbroken perimeter a fine, engraved taper. -->
+  <g fill="currentColor">
+    <path d="M25 146C54 149 74 146 92 139C72 149 47 152 25 146Z"/>
+    <path d="M546 156C570 154 590 146 613 137C591 150 569 157 546 156Z"/>
+    <path d="M200 153C218 162 235 168 252 168C232 170 213 163 200 153Z"/>
+  </g>
+</svg>

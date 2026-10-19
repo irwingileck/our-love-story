@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 230" fill="none" aria-hidden="true">
+  <!-- An open lunar bow sits inside a single slow air current, without an enclosing badge. -->
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="2" d="M306 24C273 28 250 54 250 82C250 113 274 135 304 137C286 130 274 114 273 95C271 74 283 56 302 49"/>
+    <path stroke-width="1" d="M299 32C281 40 269 54 265 71"/>
+    <!-- The ribbon passes beneath the crescent and turns into one compact inward scroll. -->
+    <path stroke-width="2.05" d="M29 155C82 121 123 119 172 139C215 157 242 178 287 175C329 172 353 148 387 142C415 137 438 144 450 157C461 171 456 188 442 192C429 197 416 187 418 176C419 167 429 164 434 170C438 174 435 179 431 178"/>
+    <path stroke-width="1.25" d="M54 161C98 138 130 141 170 156C211 173 242 194 287 190C330 187 357 162 386 158C399 156 409 157 418 161"/>
+    <path stroke-width="1.1" d="M96 125C125 122 149 130 173 140M200 185C229 200 258 207 285 204C310 201 327 193 344 184"/>
+    <!-- Hand-drawn four-point spark: swept and asymmetric, deliberately not an icon star. -->
+    <path stroke-width="1.65" d="M368 57C368 69 363 78 353 82C365 82 371 89 373 103C374 90 379 83 390 79C377 79 371 70 368 57Z"/>
+    <path stroke-width="1.1" d="M187 59C186 68 183 73 177 76C185 77 188 81 190 90C190 81 193 76 200 74C193 73 189 68 187 59Z"/>
+    <path stroke-width="1.1" d="M333 122C337 117 340 111 341 106"/>
+  </g>
+  <g fill="currentColor">
+    <path d="M306 24C280 35 263 56 263 80C260 56 276 32 306 24Z"/>
+    <path d="M304 137C283 132 270 120 265 105C273 120 286 131 304 137Z"/>
+    <path d="M29 155C53 137 79 126 104 125C76 131 53 142 29 155Z"/>
+    <circle cx="329" cy="52" r="1.8"/>
+    <circle cx="209" cy="100" r="1.5"/>
+    <circle cx="407" cy="103" r="1.5"/>
+  </g>
+</svg>

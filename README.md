@@ -49,11 +49,11 @@ npm test
 ```
 
 O Playwright inicia e encerra o servidor local em `127.0.0.1:3100`.
-Existem **quatro cenários principais**, verificados em desktop e celular (Chromium):
+Existem **cinco cenários principais**, verificados em desktop e celular (Chromium):
 **T01** site/animações/contador, **T02** modo escuro, **T03** ilustração acompanha
-o tema e **T04** paisagens em camadas (parametrizado em três propostas).
-A suíte completa soma **12 execuções**. A lista cumulativa, cobertura, comandos
-e regra para novas funcionalidades estão em [docs/TESTES.md](docs/TESTES.md).
+o tema, **T04** paisagens em camadas e **T05** kits vetoriais originais transparentes
+(T04/T05 parametrizados em três propostas). A suíte completa soma **18 execuções**.
+A lista cumulativa, cobertura, comandos e regra para novas funcionalidades estão em [docs/TESTES.md](docs/TESTES.md).
 
 As três propostas de fundo ficam em `/propostas/serra`, `/propostas/brisa` e
 `/propostas/estelar`. A home `/` mantém a apresentação anterior. Arquitetura e

@@ -25,7 +25,6 @@
   --landscape-wash: #83b09a;
   --landscape-ink: #9ab7a5;
 }
-:global(html[data-theme="dark"]) .ornaments { opacity: .25; }
 .layer { position: absolute; inset: 0; pointer-events: none; }
 .layer svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .layer :global(.landscape-mobile) { display: none; }
@@ -46,33 +45,20 @@
 .ridge1 { opacity: .10; }
 .ridge2 { opacity: .12; }
 .ridge3 { opacity: .15; }
-.ornaments { opacity: .30; }
-.ornaments .bank { mask-image: linear-gradient(90deg, #000 15%, #000c 55%, transparent 100%); }
-.mountainDrawing, .wind { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
-.mountainDrawing { stroke-width: 1.35; }
-.cloud path { fill: currentColor; }
 .particles { color: var(--landscape-ink); opacity: .45; }
 .particles svg { fill: currentColor; }
 .particle { position: absolute; width: 12px; height: 18px; animation: drift var(--drift-duration) var(--drift-delay) ease-in-out infinite alternate; }
 .dot { width: 10px; height: 10px; opacity: .65; }
 .star svg { fill: none; stroke: currentColor; stroke-width: 1.4; }
 .cloud { animation: cloudDrift 28s ease-in-out infinite alternate; }
-.highCloud { animation-duration: 36s; animation-delay: -9s; }
 .wind { animation: cloudDrift 32s -12s ease-in-out infinite alternate; }
 @keyframes drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(4px, -9px, 0); } }
 @keyframes cloudDrift { from { transform: translateX(-3px); } to { transform: translateX(8px); } }
 .brisa .left { width: 47%; }
 .brisa .right { width: 36%; top: 21%; height: 79%; }
 .brisa .right :global(.landscape-desktop) { transform: none; }
-.brisa .wind { stroke-width: 1.5; }
-.brisa .ornaments .left { width: 40%; }
-.brisa .ornaments .right { top: 0; height: 100%; width: 38%; }
 .estelar .bank, .estelar svg.bank { width: 49%; }
 .estelar .right :global(.landscape-desktop) { transform: translateY(2%); }
-.estelar .wind { opacity: .45; transform: translateY(200px); animation: none; }
-.skyArc { fill: none; stroke: currentColor; stroke-width: 1; }
-.skyArc circle { fill: currentColor; stroke: none; }
-.estelar .ornaments .right .skyArc { transform: translateY(75px) scale(.8); }
 .navigation {
   position: absolute;
   top: 16px;
@@ -105,9 +91,6 @@
   .bank, .layer svg.bank { width: 46%; }
   .layer :global(.landscape-desktop) { display: none; }
   .layer :global(.landscape-mobile) { display: block; }
-  .ornaments { opacity: .28; }
-  .landscape .ornaments svg.bank { width: 40%; mask-image: linear-gradient(90deg, #000 0%, #0008 40%, transparent 92%); }
-  .highCloud { opacity: .7; }
   .ridge0 { opacity: .035; }
   .ridge1 { opacity: .045; }
   .ridge2 { opacity: .055; }
@@ -117,5 +100,53 @@
   .dot { width: 8px; height: 8px; }
   .navigation { gap: 0; }
   .navigation a { padding: 0 5px; }
-  .estelar .wind { transform: translateY(100px); }
+}
+
+/* Independent engraving banks leave a quiet central channel. The masters keep
+   their native viewBox proportions and are never cropped, stretched or masked. */
+.ornaments { opacity: .62; }
+:global(html[data-theme="dark"]) .ornaments { opacity: .58; }
+.artBank { position: absolute; top: 0; bottom: 0; width: 31%; }
+.artLeft { left: 1.5%; }
+.artRight { right: 1.5%; }
+.artBank svg { position: absolute; width: 100%; height: auto; overflow: visible; }
+.peak { bottom: 7%; }
+.cloud { top: 8%; }
+.wind { top: 45%; }
+.artRight .peak { bottom: 3%; }
+.artRight .cloud { top: 23%; animation-duration: 37s; animation-delay: -11s; }
+.artRight .wind { top: 51%; animation-duration: 41s; }
+/* Brisa follows an oblique valley: long clouds high on one bank, lower on the
+   other, with the engraved wind answering the gentle silhouette slopes. */
+.brisa .artLeft .peak { bottom: 18%; }
+.brisa .artRight .peak { bottom: 6%; }
+.brisa .artLeft .cloud { top: 15%; }
+.brisa .artRight .cloud { top: 32%; }
+.brisa .artLeft .wind { top: 42%; }
+.brisa .artRight .wind { top: 60%; }
+/* Estelar's moon is part of the original wind master, not a procedural sky arc. */
+.estelar .artLeft .peak { bottom: 5%; }
+.estelar .artRight .peak { bottom: 9%; }
+.estelar .artLeft .cloud { top: 35%; }
+.estelar .artRight .cloud { top: 46%; }
+.estelar .artLeft .wind { top: 9%; }
+.estelar .artRight .wind { top: 17%; }
+@media (max-width: 699px) {
+  .ornaments, :global(html[data-theme="dark"]) .ornaments { opacity: .76; }
+  .artBank { width: 31%; --scene-edge: calc(78px + min(100vw, 600px)); }
+  .artLeft { left: 2.5%; }
+  .artRight { right: 2.5%; }
+  .landscape .artLeft .peak { bottom: 2%; }
+  .landscape .artRight .peak { bottom: 1%; }
+  /* Larger scrolls sit beside the diamond's tapered foot, not behind its clouds
+     or the message. Position follows scene width rather than total page height. */
+  .artBank .cloud { width: 130%; }
+  .landscape .artLeft .cloud { top: calc(var(--scene-edge) - 60px); }
+  .landscape .artRight .cloud { right: 0; top: calc(var(--scene-edge) - 110px); }
+  .landscape .artLeft .wind { top: 60px; }
+  .landscape .artRight .wind { top: 65px; }
+  .brisa .artLeft .cloud { top: calc(var(--scene-edge) - 55px); }
+  .brisa .artRight .cloud { top: calc(var(--scene-edge) - 106px); }
+  .estelar .artLeft .cloud { top: calc(var(--scene-edge) - 65px); }
+  .estelar .artRight .cloud { top: calc(var(--scene-edge) - 112px); }
 }
