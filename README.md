@@ -1,9 +1,11 @@
 # Our Love Story
 
-Um site sobre um relacionamento, feito com Next.js 13 e React 18.
-O Playwright está fixado em `1.60.0`, cuja faixa de Node inclui o Node 18 já
-indicado por `.nvmrc`; essa configuração antiga não foi alterada. Esta alteração
-foi verificada com Node 24.22.0.
+Um site sobre um relacionamento, feito com Next.js **16.4.2** e React/ReactDOM
+**19.3.1** (versões estáveis verificadas no registro npm em 18/10/2026).
+Use **Node 22.x** (`nvm use`, conforme `.nvmrc`); Node 24.x também é aceito.
+O Next 16 exige Node >=20.9.0 e não suporta Node 18. Build, auditoria e testes
+reais foram verificados com Node 22.23.3 e 24.22.0; Playwright segue em `1.60.0`.
+Não houve mudança de configuração ou credenciais da Vercel.
 
 ## Executar localmente
 
@@ -69,9 +71,41 @@ executar a suíte completa. Novos detalhes de uma funcionalidade entram como
 `test.step` no seu cenário; novas funcionalidades acrescentam cenários à lista
 cumulativa. Não escrever toda a implementação antes dos testes.
 
-## Pendências anteriores a esta alteração
+## Segurança das dependências — atualização de 18/10/2026
 
-`npm audit --omit=dev` continua indicando **4 pacotes de produção vulneráveis
-(3 high, 1 critical)** na árvore antiga do Next.js. A atualização requer trabalho
-separado; não foi executado `npm audit fix` nem upgrade de Next/React. O build
-continua mostrando o aviso já existente de Browserslist/caniuse-lite desatualizado.
+A árvore anterior tinha **4 pacotes de produção com alertas (3 high, 1 critical)**;
+a auditoria completa tinha **10 (1 low, 1 moderate, 7 high, 1 critical)**.
+Ambos os comandos retornaram status **1** antes da atualização (RED).
+Após o upgrade, reinstalação limpa com `npm ci` e atualização compatível das
+transitivas, **`npm audit --omit=dev` e `npm audit` retornaram status 0, sem alertas
+conhecidos na consulta** (GREEN). Isso não garante ausência universal de falhas
+nem substitui novas consultas ao registro.
+
+```bash
+npm ci
+npm run security:audit
+```
+
+O gate executa `npm audit --omit=dev && npm audit`, sem filtro por severidade,
+supressões, `--force` ou overrides. Se houver alerta ou erro de consulta, falha.
+Next, React e ReactDOM estão fixados; o lock mantém as versões transitivas
+compatíveis atualizadas (incluindo Babel, Browserslist, SVGO, js-yaml, nanoid e
+source-map-js). Não se adicionaram novas funcionalidades.
+
+O Next 16 usa Turbopack por padrão. Os scripts `dev` e `build` usam `--webpack`
+para preservar o loader SVGR de `next.config.js` e o styled-jsx da cena original.
+O Next instalado exige PostCSS **8.5.23**, já fora das faixas afetadas encontradas
+na auditoria. A inspeção real de `next/dist/compiled` não encontrou uma cópia do
+core PostCSS: loaders/minificador usam `require('postcss')`, resolvido para essa
+versão, com nanoid **3.3.20** e source-map-js **1.2.2**. Não se mascarou uma cópia
+interna vulnerável com overrides.
+
+Referências oficiais consultadas: guia de upgrade para Next 16 e política de
+suporte do Next.js (16.x em Active LTS); versões, engines e peers conferidos com
+`npm view next@16.4.2 version engines peerDependencies dependencies --json` e
+`npm view react-dom@19.3.1 peerDependencies --json`.
+
+Evidências JSON, árvore instalada e logs ficam fora do Git, em
+`$TMPDIR/our-love-story-security/`. A verificação local cobriu build e **4/4 testes
+em dev + 4/4 em produção**, sem publicar. Publicação em produção continua
+condicionada à validação manual; esta atualização não executou push/deploy.

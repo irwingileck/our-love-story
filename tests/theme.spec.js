@@ -86,6 +86,9 @@ test('T02 — dark mode works', async ({ page }) => {
   });
   await test.step('keyboard focus is visible and Enter/Space toggle the theme', async () => {
     await page.reload();
+    // Keyboard events do not auto-wait for Next's client-side CSS/hydration.
+    await expect(toggle(page)).toBeVisible();
+    await expect(page.locator('.titulo-pequeno')).not.toContainText('0 anos, 0 meses, 0 dias, 0h 0m 0s');
     await page.keyboard.press('Tab');
     await expect(toggle(page)).toBeFocused();
     await expect(toggle(page)).toHaveCSS('outline-style', 'solid');
