@@ -1,0 +1,121 @@
+.home {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  box-sizing: border-box;
+  padding-top: clamp(64px, 7vh, 84px) !important;
+  padding-bottom: 64px !important;
+}
+.home :global(.scene-wrapper),
+.home :global(center) {
+  position: relative;
+  z-index: 1;
+}
+.landscape {
+  --landscape-wash: #548d75;
+  --landscape-ink: #426d5a;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  color: var(--landscape-ink);
+  transition: color .6s ease;
+}
+:global(html[data-theme="dark"]) .landscape {
+  --landscape-wash: #83b09a;
+  --landscape-ink: #9ab7a5;
+}
+:global(html[data-theme="dark"]) .ornaments { opacity: .25; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.layer svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.layer :global(.landscape-mobile) { display: none; }
+.bank {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 43%;
+  height: 100%;
+  mask-image: linear-gradient(90deg, #000 10%, #0009 48%, transparent 100%);
+}
+.layer svg.bank { width: 43%; }
+.left { left: 0; }
+.right { right: 0; transform: scaleX(-1); }
+.right :global(.landscape-desktop) { transform: translateY(-9%) scaleY(1.13); }
+.ridge0, .ridge1, .ridge2, .ridge3 { fill: var(--landscape-wash); transition: fill .6s ease; }
+.ridge0 { opacity: .075; }
+.ridge1 { opacity: .10; }
+.ridge2 { opacity: .12; }
+.ridge3 { opacity: .15; }
+.ornaments { opacity: .30; }
+.ornaments .bank { mask-image: linear-gradient(90deg, #000 15%, #000c 55%, transparent 100%); }
+.mountainDrawing, .wind { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.mountainDrawing { stroke-width: 1.35; }
+.cloud path { fill: currentColor; }
+.particles { color: var(--landscape-ink); opacity: .45; }
+.particles svg { fill: currentColor; }
+.particle { position: absolute; width: 12px; height: 18px; animation: drift var(--drift-duration) var(--drift-delay) ease-in-out infinite alternate; }
+.dot { width: 10px; height: 10px; opacity: .65; }
+.star svg { fill: none; stroke: currentColor; stroke-width: 1.4; }
+.cloud { animation: cloudDrift 28s ease-in-out infinite alternate; }
+.highCloud { animation-duration: 36s; animation-delay: -9s; }
+.wind { animation: cloudDrift 32s -12s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(4px, -9px, 0); } }
+@keyframes cloudDrift { from { transform: translateX(-3px); } to { transform: translateX(8px); } }
+.brisa .left { width: 47%; }
+.brisa .right { width: 36%; top: 21%; height: 79%; }
+.brisa .right :global(.landscape-desktop) { transform: none; }
+.brisa .wind { stroke-width: 1.5; }
+.brisa .ornaments .left { width: 40%; }
+.brisa .ornaments .right { top: 0; height: 100%; width: 38%; }
+.estelar .bank, .estelar svg.bank { width: 49%; }
+.estelar .right :global(.landscape-desktop) { transform: translateY(2%); }
+.estelar .wind { opacity: .45; transform: translateY(200px); animation: none; }
+.skyArc { fill: none; stroke: currentColor; stroke-width: 1; }
+.skyArc circle { fill: currentColor; stroke: none; }
+.estelar .ornaments .right .skyArc { transform: translateY(75px) scale(.8); }
+.navigation {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  color: var(--page-text);
+  font: 13px Georgia, serif;
+}
+.navigation a {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 6px;
+  opacity: .62;
+}
+.navigation a[aria-current], .navigation a:hover { opacity: 1; text-decoration: underline; text-decoration-thickness: 1px; }
+.navigation a:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; border-radius: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .landscape, .landscape * { animation: none !important; transition: none !important; }
+}
+@media (max-width: 699px) {
+  .home { padding-top: 78px !important; padding-bottom: 76px !important; }
+  .bank, .layer svg.bank { width: 46%; }
+  .layer :global(.landscape-desktop) { display: none; }
+  .layer :global(.landscape-mobile) { display: block; }
+  .ornaments { opacity: .28; }
+  .landscape .ornaments svg.bank { width: 40%; mask-image: linear-gradient(90deg, #000 0%, #0008 40%, transparent 92%); }
+  .highCloud { opacity: .7; }
+  .ridge0 { opacity: .035; }
+  .ridge1 { opacity: .045; }
+  .ridge2 { opacity: .055; }
+  .ridge3 { opacity: .07; }
+  .particle:nth-child(3n) { display: none; }
+  .particle { width: 9px; height: 14px; }
+  .dot { width: 8px; height: 8px; }
+  .navigation { gap: 0; }
+  .navigation a { padding: 0 5px; }
+  .estelar .wind { transform: translateY(100px); }
+}

@@ -4,8 +4,9 @@ Esta lista deve crescer junto com o produto. **Toda nova funcionalidade deve
 acrescentar um cenário principal com ID sequencial (T03, T04, …), sua cobertura e
 comando de execução**, sem remover ou enfraquecer os cenários existentes. Detalhes
 adicionais de uma funcionalidade existente entram como subpassos (`test.step`) no
-seu cenário. Hoje existem **T01, T02 e T03**; cada um roda nos projetos
-`desktop` e `mobile`, totalizando **seis execuções** por suíte.
+seu cenário. Hoje existem **T01, T02, T03 e T04**; T01–T03 rodam em
+`desktop` e `mobile` (seis execuções). T04 é parametrizado nas três paisagens
+nesses mesmos projetos (mais seis), totalizando **12 execuções** por suíte.
 
 Arquivo executável: `tests/theme.spec.js`. Configuração: `playwright.config.js`.
 O projeto mobile usa emulação Pixel 5 no Chromium, não um aparelho físico nem WebKit.
@@ -158,3 +159,75 @@ Os logs finais são `node22-ci.log`, `node22-security-gate.log`, `node22-build.l
 `green-production-audit.json` e `green-full-audit.json` na pasta de evidências.
 Nada foi publicado; validação manual da prévia e aprovação explícita continuam
 obrigatórias antes de produção.
+
+## T04 — Três paisagens opt-in, responsivas e acessíveis
+
+Arquivo novo: `tests/landscapes.spec.js`. T01–T03 permanecem intactos.
+T04 roda separadamente em `/propostas/serra`, `/propostas/brisa` e
+`/propostas/estelar`, em desktop e mobile: **seis execuções adicionais**.
+
+Subpassos cumulativos:
+
+1. Cada rota mantém desenho, mensagem e subtítulo originais. As geometrias de
+   Brisa e Estelar diferem de Serra, não apenas as cores.
+2. Três camadas DOM independentes (`mountains`, `ornaments`, `particles`),
+   cada uma com SVG real e cobrindo a largura/altura do contêiner da página.
+3. Decoração `aria-hidden`, `pointer-events: none`, sem controles/tabindex;
+   todos os SVGs decorativos têm `focusable="false"`.
+4. Silhuetas e ornamentos possuem versões mobile próprias. Montanhas ornamentais
+   menores que 32% da largura do celular; sem overflow horizontal.
+5. Tinta e lavagem mudam entre claro/escuro com transição CSS, retornam à paleta
+   original e não substituem a ilustração. Sem filtro no HTML, body, página ou fundo.
+6. Partículas de posição determinística têm durações independentes >=12 s;
+   `getAnimations()` confirma avanço do tempo e a transformação realmente muda.
+   Nuvens decorativas também se movem; nuvem original e contador continuam avançando.
+7. `prefers-reduced-motion: reduce` remove todas as animações/transições **novas**;
+   mantém as animações originais sem alterar seu comportamento anterior.
+8. Navegação de comparação tem três links, rota atual indicada, alvos >=44 px,
+   sem sobrepor botão de tema ou desenho. Mobile também verificado em 320 × 640.
+9. Navegar entre propostas funciona; rotas recebem `noindex, nofollow`. Ao voltar
+   a `/`, fundo, classes de proposta e navegação estão ausentes.
+10. Nenhum erro de página/console, incluindo hidratação, em todos os fluxos.
+
+```bash
+npm test -- --grep T04
+npm test
+NEXT_TELEMETRY_DISABLED=1 npm run build
+PLAYWRIGHT_TEST_PRODUCTION=1 npm test
+npm run security:audit
+```
+
+### Evidências locais desta etapa
+
+Pasta: `$TMPDIR/our-love-story-landscapes/` (fora do Git; temporária).
+
+- Baseline antes de editar: **6/6** (`baseline.log`).
+- Ciclos verticais RED → GREEN: `01-route-*`, `02-composition-*`, `03-theme-*`,
+  `04-motion-*`, `05-reduced-*`, `06-brisa-*`, `07-estelar-*`, `08-navigation-*`,
+  `09-mobile-ornaments-*`, `10-svg-focus-red.log`; o GREEN final desse último
+  ciclo está em `dev-final.log`. Cada RED falhou pela ausência esperada, antes da
+  implementação correspondente; todos os GREEN executaram a suíte cumulativa.
+- `02-composition-green.log` registra um erro de configuração de CSS Modules:
+  seletor global sem classe local. Corrigido com classe local opt-in;
+  `02-composition-green-retry.log` passou. Não foi contado como RED funcional.
+- O primeiro GREEN de navegação revelou aviso SSR de `<title>` com filhos múltiplos;
+  refatorado para uma string única. Execuções finais e build sem esse aviso.
+- Dev final: **12/12**, **45,6 s** (`dev-final.log`). Produção local: **12/12**,
+  **36,7 s** (`production-final.log`), usando Node 24 e Chromium real com o fallback
+  local de bibliotecas já documentado. Sem dependências novas ou pacotes de SO.
+- Build: status 0, três novas rotas estáticas (`build-final.log`). Auditorias
+  produção e completa: **zero vulnerabilidades conhecidas**, status 0 (`audit.log`).
+- Capturas reais de produção em 1440 × 960 e 393 × 851, temas claro/escuro:
+  `final-{serra,brisa,estelar}-{desktop,mobile}-{light,dark}.png` (**12 imagens**),
+  todas inspecionadas visualmente. Revisão inicial levou a ornamentos mobile
+  próprios e menores para não disputar espaço com a mensagem.
+- `/` comparado pixel a pixel com capturas anteriores às mudanças, nos quatro
+  tamanhos/temas: **zero pixels alterados**, excluindo somente o selo de ferramentas
+  dev do Next no canto inferior esquerdo. Animações foram pausadas no mesmo tempo
+  e contador dinâmico oculto nos dois lados. Ver `default-pixel-comparison.json`,
+  `compare-default.cjs` e `capture.cjs` na pasta de evidências.
+- Limites: Chromium emulado, não aparelho físico/Safari; desenho vetorial suave,
+  não reprodução fotográfica da textura aquarelada da referência. As rotas são
+  estudos visuais, não uma barreira de acesso. Nenhum push, deploy ou autenticação.
+
+Arquitetura, rotas e tokens: `docs/PROPOSTAS.md`.
