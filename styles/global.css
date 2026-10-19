@@ -6,6 +6,12 @@
 html[data-theme="dark"] {
   --page-background: #10221d;
   --page-text: #ECFDF5;
+  --scene-ink: #79a991;
+}
+
+/* Recolor only the illustration; preserve each SVG's geometry and animations. */
+html[data-theme="dark"] .scene path {
+  fill: var(--scene-ink);
 }
 
 body {

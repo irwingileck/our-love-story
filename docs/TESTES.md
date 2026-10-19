@@ -4,8 +4,8 @@ Esta lista deve crescer junto com o produto. **Toda nova funcionalidade deve
 acrescentar um cenário principal com ID sequencial (T03, T04, …), sua cobertura e
 comando de execução**, sem remover ou enfraquecer os cenários existentes. Detalhes
 adicionais de uma funcionalidade existente entram como subpassos (`test.step`) no
-seu cenário. Hoje existem exatamente **T01 e T02**; cada um roda nos projetos
-`desktop` e `mobile`, totalizando quatro execuções por suíte.
+seu cenário. Hoje existem **T01, T02 e T03**; cada um roda nos projetos
+`desktop` e `mobile`, totalizando **seis execuções** por suíte.
 
 Arquivo executável: `tests/theme.spec.js`. Configuração: `playwright.config.js`.
 O projeto mobile usa emulação Pixel 5 no Chromium, não um aparelho físico nem WebKit.
@@ -49,6 +49,26 @@ Subpassos cumulativos:
 ```bash
 npm test -- --grep T02
 ```
+
+## T03 — Ilustração acompanha o tema
+
+- No tema escuro, todos os caminhos da moldura, montanha, nuvens, sol e ventos
+  assumem o verde suave `#79a991`, sem filtro sobre a cena inteira.
+- Os oito elementos mantêm as animações CSS; a nuvem continua mudando de
+  transformação enquanto o tema escuro está ativo.
+- A preferência escura salva reaplica a paleta ao recarregar.
+- Voltar ao claro restaura as cores calculadas de todos os caminhos originais,
+  incluindo o gradiente da montanha. Sem alteração dos arquivos SVG.
+- Mesmas verificações de erros de página/console dos cenários anteriores.
+
+```bash
+npm test -- --grep T03
+```
+
+TDD: o novo cenário falhou em desktop/mobile com a cor original da moldura
+(`rgb(9, 10, 9)`) antes do CSS do tema escuro; após a regra mínima, passou.
+Verificações adicionais cobrem persistência, restauração e animação em movimento.
+Logs RED/GREEN ficam em `$TMPDIR/our-love-story-tdd/illustration-*.log`.
 
 ## Executar tudo
 

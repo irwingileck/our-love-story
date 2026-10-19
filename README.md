@@ -28,7 +28,9 @@ Esses comandos não publicam nem fazem deploy.
 O botão **Modo escuro** fica fixo no canto superior direito. Pode ser acionado
 com clique/toque ou com Tab seguido de Enter/Espaço; o foco fica visível.
 `aria-pressed` informa se o modo escuro está ativo. As cores usam variáveis CSS,
-sem filtros sobre os SVGs. Ilustração, animações, mensagem e contador são preservados.
+sem filtros sobre os SVGs. No tema escuro, a ilustração usa o verde suave
+`#79a991`, inspirado na referência visual. O tema claro mantém as cores originais;
+geometria, animações, mensagem e contador são preservados.
 
 O padrão é o verde-claro original (`#ECFDF5`), independentemente do tema do sistema.
 A escolha explícita é salva na chave `theme` do `localStorage` (`light`/`dark`).
@@ -47,8 +49,9 @@ npm test
 ```
 
 O Playwright inicia e encerra o servidor local em `127.0.0.1:3100`.
-Existem **dois cenários principais**, repetidos em desktop e celular (Chromium):
-**T01** site/animações/contador e **T02** modo escuro. A lista cumulativa, cobertura,
+Existem **três cenários principais**, repetidos em desktop e celular (Chromium),
+totalizando **seis execuções**: **T01** site/animações/contador, **T02** modo escuro
+e **T03** ilustração acompanha o tema. A lista cumulativa, cobertura,
 comandos e regra para novas funcionalidades estão em [docs/TESTES.md](docs/TESTES.md).
 
 Para testar o build de produção localmente, sem publicar nada:
