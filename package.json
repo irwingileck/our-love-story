@@ -4,16 +4,25 @@
   "description": "estudos do curso.dev",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "test": "playwright test",
+    "test:e2e": "playwright test",
+    "security:audit": "npm audit --omit=dev && npm audit"
   },
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": "22.x || 24.x"
+  },
   "dependencies": {
-    "next": "^13.1.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.60.0",
     "@svgr/webpack": "^8.1.0"
   }
 }

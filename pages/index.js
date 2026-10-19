@@ -1,9 +1,27 @@
+import { useEffect, useState } from "react";
 import AnimatedScene from "../components/AnimatedScene";
 import Contador from "../components/Contador";
 
 export default function Home() {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.dataset.theme === "dark");
+  }, []);
+
+  function toggleTheme() {
+    const nextTheme = dark ? "light" : "dark";
+    document.documentElement.dataset.theme = nextTheme;
+    setDark(!dark);
+    try {
+      localStorage.setItem("theme", nextTheme);
+    } catch (_) {
+      // Storage may be blocked; the toggle still works for this visit.
+    }
+  }
+
   const estiloContainer = {
-    backgroundColor: "#ECFDF5",  // por exemplo: um cinza azulado
+    backgroundColor: "var(--page-background)",
     minHeight: "100vh",          // para ocupar toda a altura da tela
     margin: 0,
     padding: 0,
@@ -11,6 +29,15 @@ export default function Home() {
 
   return (
     <div style={estiloContainer}>
+      <button
+        className="theme-toggle"
+        type="button"
+        aria-label="Modo escuro"
+        aria-pressed={dark}
+        onClick={toggleTheme}
+      >
+        Modo escuro
+      </button>
       <AnimatedScene />
           <center><h2>Lindeza</h2>
           <h3>Vc é minha brisa e ventania,<br/>
