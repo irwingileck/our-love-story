@@ -8,6 +8,7 @@ import EstelarMountain from '../assets/landscapes/estelar/mountain.svg';
 import EstelarClouds from '../assets/landscapes/estelar/clouds.svg';
 import EstelarWind from '../assets/landscapes/estelar/wind.svg';
 import styles from './Landscape.module.css';
+import { hybrids } from './proposals';
 
 // Drawn in local side coordinates: the two banks never stretch across the message.
 const serraDesktop = [
@@ -57,31 +58,34 @@ const kits = {
 };
 
 export default function Landscape({ variant }) {
-  const { Mountain, Clouds, Wind } = kits[variant];
-  const flowing = variant === 'brisa';
+  const hybrid = hybrids.find(proposal => proposal.slug === variant);
+  const banks = hybrid?.banks || ['left', 'right'].map(() => ({ ridge: variant, mountain: variant, clouds: variant, wind: variant }));
+  const ridges = { serra: [serraDesktop, serraMobile], brisa: [brisaDesktop, brisaMobile], estelar: [estelarDesktop, estelarMobile] };
   const celestial = variant === 'estelar';
-  const desktopRidges = celestial ? estelarDesktop : flowing ? brisaDesktop : serraDesktop;
-  const mobileRidges = celestial ? estelarMobile : flowing ? brisaMobile : serraMobile;
   return (
     <div data-landscape={variant} className={`landscape ${styles.landscape} ${styles[variant] || ''}`} aria-hidden="true">
       <div data-layer="mountains" className={styles.layer}>
-        {['left', 'right'].map((side) => <div className={`${styles.bank} ${styles[side]}`} key={side}>
+        {['left', 'right'].map((side, index) => <div data-ridge-bank={side} data-ridge-kit={banks[index].ridge} className={`${styles.bank} ${styles[side]}`} key={side}>
           <svg className="landscape-desktop" viewBox="0 0 500 1000" preserveAspectRatio="none" focusable="false">
-            {desktopRidges.map((d, index) => <path key={d} d={d} className={styles[`ridge${index}`]} />)}
+            {ridges[banks[index].ridge][0].map((d, index) => <path key={d} d={d} className={styles[`ridge${index}`]} />)}
           </svg>
           <svg className="landscape-mobile" viewBox="0 0 340 1000" preserveAspectRatio="none" focusable="false">
-            {mobileRidges.map((d, index) => <path key={d} d={d} className={styles[`ridge${index}`]} />)}
+            {ridges[banks[index].ridge][1].map((d, index) => <path key={d} d={d} className={styles[`ridge${index}`]} />)}
           </svg>
         </div>)}
       </div>
       <div data-layer="ornaments" className={`${styles.layer} ${styles.ornaments}`}>
-        {['desktop', 'mobile'].map((size) => ['left', 'right'].map((side) => (
-          <div key={`${size}-${side}`} className={`landscape-${size} ${styles.artBank} ${side === 'left' ? styles.artLeft : styles.artRight}`}>
-            <Mountain data-artwork={`${variant}-mountain`} data-corner-mountain className={styles.peak} focusable="false" />
-            <Clouds data-artwork={`${variant}-clouds`} data-decorative-cloud className={styles.cloud} focusable="false" />
-            <Wind data-artwork={`${variant}-wind`} className={styles.wind} focusable="false" />
-          </div>
-        )))}
+        {['desktop', 'mobile'].map((size) => ['left', 'right'].map((side, index) => {
+          const bank = banks[index];
+          const Mountain = kits[bank.mountain].Mountain;
+          const Clouds = kits[bank.clouds].Clouds;
+          const Wind = kits[bank.wind].Wind;
+          return <div data-art-bank={side} key={`${size}-${side}`} className={`landscape-${size} ${styles.artBank} ${side === 'left' ? styles.artLeft : styles.artRight}`}>
+            <Mountain data-artwork={`${bank.mountain}-mountain`} data-corner-mountain className={styles.peak} focusable="false" />
+            <Clouds data-artwork={`${bank.clouds}-clouds`} data-decorative-cloud className={styles.cloud} focusable="false" />
+            <Wind data-artwork={`${bank.wind}-wind`} className={styles.wind} focusable="false" />
+          </div>;
+        }))}
       </div>
       <div data-layer="particles" className={`${styles.layer} ${styles.particles}`}>
         {(celestial ? skyDust : dust).map(([x, y, star], index) => <span data-particle key={index} className={`${styles.particle} ${star ? styles.star : styles.dot}`} style={{ left: `${x}%`, top: `${y}%`, '--drift-duration': `${18 + index * 3}s`, '--drift-delay': `${-index * 2}s` }}>

@@ -2,13 +2,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import styles from './Landscape.module.css';
 
-const proposals = [
-  { slug: 'serra', short: 'Serra', title: 'Serra Serena' },
-  { slug: 'brisa', short: 'Brisa', title: 'Brisa Entre Vales' },
-  { slug: 'estelar', short: 'Céu', title: 'Céu de Casa' },
-];
+import { originals, hybrids } from './proposals';
 
 export default function ProposalNav({ variant }) {
+  const proposals = hybrids.some(proposal => proposal.slug === variant) ? hybrids : originals;
   const current = proposals.find((proposal) => proposal.slug === variant);
   return <>
     <Head>

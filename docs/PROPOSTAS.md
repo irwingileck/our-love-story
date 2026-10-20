@@ -1,6 +1,8 @@
-# Estudos de paisagem da home — iteração 2
+# Estudos de paisagem da home — iterações 2 e 3
 
-São três composições **opt-in**. `/` continua exibindo a home anterior, sem fundo
+São seis composições **opt-in**, em duas famílias de três. A iteração 2 abaixo
+permanece disponível; a iteração 3 ao final combina somente Serra e Estelar.
+`/` continua exibindo a home anterior, sem fundo
 novo nem navegação de propostas. Não existe seleção persistida, login ou mudança
 na mensagem. A escolha definitiva depende de revisão e aprovação antes de integrar.
 
@@ -137,3 +139,90 @@ vetoriais suaves e a arte é gravura transparente, **não uma reprodução pixel
 da textura aquarelada da referência**. Preservados fonte, texto e vermelho originais,
 inclusive no modo escuro. Nada foi commitado, enviado ao remoto ou implantado nesta
 iteração; a revisão independente precede a prévia.
+
+## Iteração 3 — três híbridos de Serra + Céu (Estelar)
+
+Os três candidatos anteriores continuam intactos. Estes estudos adicionais
+**recombinam os SVGs aceitos**, sem criar desenhos substitutos, editar mestres ou
+usar o kit Brisa. Todos usam a mesma paleta; as diferenças são arte selecionada,
+posição, escala, densidade de horizonte e espaço negativo.
+
+| Rota local | Nome / link curto | Margem esquerda: montanha / nuvens / vento | Margem direita: montanha / nuvens / vento | Silhuetas |
+| --- | --- | --- | --- | --- |
+| `/propostas/serra-lunar` | Serra Lunar / Lua | Serra / Estelar / Estelar | Serra / Estelar / Estelar | Serra em ambas |
+| `/propostas/horizonte-sereno` | Horizonte Sereno / Vale | Estelar / Serra / Serra | Estelar / Serra / Estelar | Estelar em ambas |
+| `/propostas/ceu-das-serras` | Céu das Serras / Serras | Serra / Estelar / Serra | Estelar / Serra / Estelar | Serra à esquerda, Estelar à direita |
+
+- **Serra Lunar:** picos alpinos grandes nos cantos inferiores, planos altos de
+  Serra, fitas de nuvem Estelar a 31%/43% da página e luas/ventos no alto (8%/15%).
+  A moldura é mais envolvente, sem invadir o canal central.
+- **Horizonte Sereno:** picos gêmeos menores (29% da largura), quatro planos baixos
+  de Estelar e amplo céu vazio. Nuvens duplas de Serra sobem para 12%/27%; vento
+  Serra à esquerda e lua Estelar alta à direita evitam uma simetria literal.
+- **Céu das Serras:** pico alpino maior e margem alta à esquerda, picos gêmeos
+  menores e horizonte baixo à direita (31%/28% no desktop). Nuvens e ventos trocam
+  de kit entre margens; o vento esquerdo flutua entre nuvem e montanha, sem cruzar
+  o pico. A composição é diagonal, não uma versão recolorida de Serra.
+
+No celular, as montanhas continuam pequenas, abaixo do contador, com geometrias
+mobile dos planos aprovados. Serra Lunar mantém duas gravuras alpinas; Horizonte
+Sereno usa picos gêmeos menores e desencontrados; Céu das Serras combina alpine de
+32% e picos gêmeos de 29%. Nuvens legíveis de cerca de 40% ladeiam o pé do losango;
+ventos ficam a 60 px do alto, afastados dos grupos centrais. A posição acompanha
+a largura da cena, não a altura variável do texto. Verificados 393 px e 320 px,
+com os dois temas e controles sem colisão.
+
+### Implementação e preservação
+
+`components/proposals.js` centraliza nomes, links e a seleção dos três mestres e
+da silhueta por margem. `Landscape.jsx` mantém um único renderer para as seis
+propostas; as variantes anteriores continuam selecionando seus próprios kits.
+Não há componente de desenho novo ou cópia triplicada da home.
+
+A navegação identifica a família: os híbridos mostram apenas **Lua / Vale /
+Serras**; as rotas anteriores mantêm **Serra / Brisa / Céu**. Cada link tem nome
+completo em `aria-label`/`title`, alvo de pelo menos 44 px e indicação de página
+atual. O título HTML identifica o estudo, sem adicionar heading visível ou mudar
+a mensagem. Metadado continua `noindex, nofollow`, não controle de acesso.
+
+Os seis arrays de silhueta são literalmente iguais ao HEAD de partida. O CSS
+anterior permanece prefixo byte a byte do arquivo: somente seletores opt-in dos
+três híbridos foram acrescentados. Os nove mestres, toda a arte central, home,
+contador, tema, scripts, dependências e arquivos T01–T05 não foram modificados.
+Persistência/fallback de storage, animações originais e três camadas integrais
+continuam funcionando. Redução de movimento continua restrita à decoração nova.
+
+### Verificação local desta iteração
+
+Evidências: `$TMPDIR/our-love-story-hybrids/`, fora do Git.
+
+- Baseline: **18/18**, antes de qualquer alteração de implementação.
+- Ciclos verticais de rota/mistura: `hybrids-01-red.log` →
+  `hybrids-01-green-retry.log` (**20/20**); `hybrids-02-*` (**22/22**);
+  `hybrids-03-*` (**24/24**). As rotas foram implementadas uma de cada vez.
+- `hybrids-04-composition-*`: RED real de posição/escala, seguido de **24/24**.
+- `hybrids-05-center-red.log`: três falhas mobile reais de interseção com texto;
+  `hybrids-05-center-green.log`: **24/24** após baixar montanhas e subir uma nuvem.
+- Revisão visual detectou vento cruzando o pico esquerdo de Céu das Serras.
+  `hybrids-06-summit-red.log` registra a falha antes da correção de posição;
+  `hybrids-dev-final.log`: **24/24 dev, 1,6 min** após o ajuste.
+- `hybrids-production-final-refined.log`: **24/24 produção local, 1,2 min**;
+  `build-final.log`: build estático status 0; `audit.log`: produção e árvore
+  completa com **zero vulnerabilidades conhecidas** na consulta, status 0.
+- `final-{serra-lunar,horizonte-sereno,ceu-das-serras}-{desktop,mobile}-{light,dark}.png`:
+  **12 capturas reais finais**, todas inspecionadas visualmente. Viewports
+  1440 × 960 e 393 × 851; PNGs de página inteira 1440 × 960 e 393 × 858.
+  `review-*.png` reúne as quatro comparações; `before-summit-refinement/`
+  preserva as imagens anteriores ao último ajuste. Frames de captura pausados
+  em 9 s para comparação; movimento real é comprovado em T06, não pelas imagens.
+- `pixel-comparison.json`: **16 comparações** de `/`, Serra, Brisa e Estelar,
+  em desktop/mobile e claro/escuro, com **zero pixels diferentes** frente ao
+  build do HEAD inicial `c5075db`. Animações sincronizadas, somente o contador
+  dinâmico oculto em ambos; sem máscaras de pixels. `capture.cjs` reproduz a coleta.
+- `preservation.json`/`verify-preservation.py`: seis arrays, todos os SVGs e os
+  arquivos protegidos iguais ao HEAD; CSS antigo preservado literalmente.
+
+Limites: Chromium e celular emulado, não Safari/aparelho físico. Testes não
+constituem aprovação artística do usuário. Os estudos continuam locais e
+**não commitados** nesta entrega: nenhum push, deploy, merge ou alteração de PR /
+produção. Revisão independente e escolha explícita continuam pendentes.

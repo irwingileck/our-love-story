@@ -4,12 +4,14 @@ Esta lista deve crescer junto com o produto. **Toda nova funcionalidade deve
 acrescentar um cenário principal com ID sequencial (T03, T04, …), sua cobertura e
 comando de execução**, sem remover ou enfraquecer os cenários existentes. Detalhes
 adicionais de uma funcionalidade existente entram como subpassos (`test.step`) no
-seu cenário. Hoje existem **T01, T02, T03, T04 e T05**; T01–T03 rodam em
+seu cenário. Hoje existem **T01, T02, T03, T04, T05 e T06**; T01–T03 rodam em
 `desktop` e `mobile` (seis execuções). T04 e T05 são parametrizados nas três paisagens
-nesses mesmos projetos (mais seis cada), totalizando **18 execuções** por suíte.
+anteriores, e T06 nos três híbridos nesses mesmos projetos (mais seis cada),
+totalizando **24 execuções** por suíte. Os registros abaixo de 12/18 execuções
+são históricos das respectivas entregas, preservados cumulativamente.
 
-Arquivos executáveis: `tests/theme.spec.js`, `tests/landscapes.spec.js` e
-`tests/artwork.spec.js`. Configuração: `playwright.config.js`.
+Arquivos executáveis: `tests/theme.spec.js`, `tests/landscapes.spec.js`,
+`tests/artwork.spec.js` e `tests/hybrids.spec.js`. Configuração: `playwright.config.js`.
 O projeto mobile usa emulação Pixel 5 no Chromium, não um aparelho físico nem WebKit.
 
 ## T01 — Site abre e as animações existentes continuam funcionando
@@ -297,3 +299,102 @@ Pasta: `$TMPDIR/our-love-story-art-v2/integration/` (temporária, fora do Git).
 - Limites: Chromium e Pixel 5 emulado, não Safari/aparelho físico. Gravura vetorial,
   sem reprodução pixel a pixel da textura aquarelada. Nenhum commit, push, PR,
   deploy, merge ou mudança em produção nesta iteração.
+
+## T06 — Três composições híbridas de kits aceitos
+
+Arquivo acrescentado: `tests/hybrids.spec.js`. T01–T05 e os fingerprints de T05
+permanecem byte a byte iguais. T06 é parametrizado em `serra-lunar`,
+`horizonte-sereno` e `ceu-das-serras`, desktop/mobile: **seis execuções novas**,
+**24 por suíte cumulativa**.
+
+Cobertura:
+
+1. Cada rota existe, mantém mensagem, cena e contador e tem título próprio /
+   `noindex, nofollow`. Nenhuma arte Brisa participa dos híbridos.
+2. A seleção por margem corresponde à tabela em `PROPOSTAS.md`. Cada SVG visível
+   contém todos os caminhos do mestre real após a mesma normalização SVGO usada
+   pelo SVGR, não um marcador ou desenho substituto. Fundo transparente,
+   `fill="none"`, tintas `currentColor`/`none`, sem raster/retângulo/`use` e
+   `focusable="false"`. T05 continua travando os hashes de todos os nove mestres.
+3. Três camadas independentes preenchem a página inteira; `aria-hidden`, sem
+   interação/foco, todos os SVGs não focáveis. Silhuetas selecionadas por margem.
+4. Composição deliberadamente diferente: lua alta e nuvem baixa de Serra Lunar;
+   nuvens altas e montanhas menores de Horizonte Sereno; margens desiguais de
+   Céu das Serras. O vento esquerdo desta última deixa pelo menos 20 px até a
+   caixa do pico alpino no desktop.
+5. Partícula, nuvem decorativa e nuvem original realmente avançam `currentTime`
+   e mudam `transform`. Partículas têm períodos independentes >=12 s. O contador
+   realmente avança. Redução de movimento remove só animações novas.
+6. Temas claro/escuro e reload preservam estado, tinta dos SVGs e mensagem.
+   Acesso ao próprio `localStorage` bloqueado continua permitindo alternância;
+   reload volta ao claro. T02 mantém todos os testes de falha de gravação,
+   preferência inválida, pré-hidratação e teclado sem alterações.
+7. Viewports 1440 × 960, 393 × 851 e 320 × 640 nos dois temas: sem overflow,
+   proporção nativa, centro livre, nenhuma caixa de ornamento cruza os retângulos
+   de texto efetivo (medidos por nó de texto, inclusive contador). Navegação não
+   colide com botão de tema; links >=44 × 44 px. Formas desktop ficam nas laterais.
+8. Só três links de híbridos, nomes acessíveis completos e indicador atual;
+   navegação real para o híbrido seguinte funciona. `/` continua sem paisagem,
+   classe de proposta ou navegação. Sem erros de página/console/hidratação.
+
+```bash
+npm test -- --grep T06
+npm test
+NEXT_TELEMETRY_DISABLED=1 npm run build
+PLAYWRIGHT_TEST_PRODUCTION=1 npm test
+npm run security:audit
+git diff --check
+```
+
+### TDD vertical e evidências — híbridos
+
+Pasta: `$TMPDIR/our-love-story-hybrids/`. Node real **24.22.0**, npm **11.19.1**;
+Chromium com as bibliotecas/fontes locais já documentadas, sem pacote de SO,
+dependência nova ou mudança de lockfile. `commands.md` lista comandos/status.
+
+| Etapa | RED real | GREEN cumulativo |
+| --- | --- | --- |
+| Baseline, antes de produção | — | `baseline.log`: **18/18**, 56,9 s |
+| Serra Lunar | `hybrids-01-red.log`: **2 falhas**, rota ausente | `hybrids-01-green-retry.log`: **20/20** |
+| Horizonte Sereno | `hybrids-02-red.log`: **2 falhas**, rota ausente | `hybrids-02-green.log`: **22/22** |
+| Céu das Serras | `hybrids-03-red.log`: **2 falhas**, rota ausente | `hybrids-03-green.log`: **24/24** |
+| Ritmo, espaço negativo e escala | `hybrids-04-composition-red.log`: **5 falhas** | `hybrids-04-composition-green.log`: **24/24** |
+| Legibilidade mobile | `hybrids-05-center-red.log`: **3 falhas mobile**, interseção com texto | `hybrids-05-center-green.log`: **24/24** |
+| Vento afastado do pico, após revisão visual | `hybrids-06-summit-red.log`: **1 falha desktop** | `hybrids-dev-final.log`: **24/24**, 1,6 min |
+
+O primeiro GREEN de mistura expôs uma asserção de teste inadequada: o SVGR
+normaliza os caminhos pelo SVGO, logo comparar diretamente com o texto SVG bruto
+falha mesmo renderizando o mestre correto. Só o novo teste foi corrigido para
+comparar todos os caminhos após normalização equivalente; o log da tentativa
+`hybrids-01-green.log` foi preservado. Não foi contado como RED funcional novo.
+
+As primeiras caracterizações de área central (`hybrids-05-regression.log` /
+`hybrids-05-probe.log`) incluíam wrappers block do contador como área de tinta de
+largura total. O teste novo passou a medir cada nó de texto; a nova execução
+`hybrids-05-center-red.log` então revelou os três problemas mobile reais, antes
+da correção de layout. Nenhuma asserção existente foi alterada ou enfraquecida.
+
+Verificação final:
+
+- `hybrids-dev-final.log`: **24/24 dev**, 1,6 min, status 0; múltiplas execuções
+  completas verdes durante os ciclos anteriores.
+- `hybrids-production-final-refined.log`: **24/24 produção local**, 1,2 min,
+  status 0, após o ajuste visual final.
+- `build-final.log`: build status 0, seis rotas estáticas de propostas mais `/`.
+- `audit.log`: `npm audit --omit=dev && npm audit`, **zero vulnerabilidades**
+  conhecidas nas duas consultas, status 0, sem supressões ou novos pacotes.
+- `preservation.json`: seis arrays idênticos, CSS anterior prefixo literal,
+  arte central/mestres/arquivos protegidos intactos.
+- `pixel-comparison.json`: **16 comparações** de `/` e três propostas antigas,
+  desktop/mobile × claro/escuro, **zero pixels diferentes** contra build do HEAD
+  inicial `c5075db`. Animações pausadas em 9 s e contador oculto nos dois lados;
+  nenhuma máscara de pixels. Isso não afirma igualdade do contador dinâmico.
+- **12 PNGs finais** `final-{slug}-{desktop,mobile}-{light,dark}.png`, capturados
+  do build e inspecionados visualmente; viewports 1440 × 960 / 393 × 851 e
+  página inteira 1440 × 960 / 393 × 858. `screenshots.json` é o inventário,
+  `capture.cjs` reproduz capturas/comparação, `review-*.png` são pranchas de revisão.
+  `before-summit-refinement/` preserva a versão anterior ao ajuste do vento.
+
+Limites: testes em Chromium/celular emulado, sem Safari ou aparelho físico;
+qualidade artística ainda depende da escolha do usuário. Sem commit, push,
+publicação, merge, alteração de PR ou escrita remota nesta entrega.

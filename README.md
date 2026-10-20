@@ -49,15 +49,25 @@ npm test
 ```
 
 O Playwright inicia e encerra o servidor local em `127.0.0.1:3100`.
-Existem **cinco cenários principais**, verificados em desktop e celular (Chromium):
+Existem **seis cenários principais**, verificados em desktop e celular (Chromium):
 **T01** site/animações/contador, **T02** modo escuro, **T03** ilustração acompanha
-o tema, **T04** paisagens em camadas e **T05** kits vetoriais originais transparentes
-(T04/T05 parametrizados em três propostas). A suíte completa soma **18 execuções**.
+o tema, **T04** paisagens em camadas, **T05** kits vetoriais originais transparentes
+e **T06** híbridos Serra + Estelar (T04/T05/T06 parametrizados em três propostas
+cada). A suíte completa soma **24 execuções**; T01–T05 permanecem inalterados.
 A lista cumulativa, cobertura, comandos e regra para novas funcionalidades estão em [docs/TESTES.md](docs/TESTES.md).
 
-As três propostas de fundo ficam em `/propostas/serra`, `/propostas/brisa` e
-`/propostas/estelar`. A home `/` mantém a apresentação anterior. Arquitetura e
-comparação visual estão em [docs/PROPOSTAS.md](docs/PROPOSTAS.md).
+As três propostas anteriores continuam em `/propostas/serra`, `/propostas/brisa`
+e `/propostas/estelar`. Três novos híbridos dos SVGs aceitos de Serra e Céu:
+
+- `/propostas/serra-lunar` — Serra Lunar: moldura alpina, nuvens alongadas e luas altas.
+- `/propostas/horizonte-sereno` — Horizonte Sereno: horizonte baixo, picos gêmeos e nuvens duplas de Serra.
+- `/propostas/ceu-das-serras` — Céu das Serras: margem alpina alta à esquerda e picos gêmeos baixos à direita.
+
+Cada família mantém somente três links de comparação; os híbridos usam
+“Lua / Vale / Serras”, com nomes completos acessíveis. A home `/` mantém a
+apresentação anterior, sem paisagem/navegação. Não há escolha publicada, login ou
+seleção persistida. Arquitetura, mistura por margem e evidências locais estão em
+[docs/PROPOSTAS.md](docs/PROPOSTAS.md).
 
 Para testar o build de produção localmente, sem publicar nada:
 

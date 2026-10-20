@@ -150,3 +150,57 @@
   .estelar .artLeft .cloud { top: calc(var(--scene-edge) - 65px); }
   .estelar .artRight .cloud { top: calc(var(--scene-edge) - 112px); }
 }
+
+/* Hybrid studies only: same soft ink, three different spatial arrangements.
+   Lunar: high moon currents, low cloud ribbons and a deep alpine frame. */
+.serra-lunar .artLeft .wind { top: 8%; }
+.serra-lunar .artRight .wind { top: 15%; }
+.serra-lunar .artLeft .cloud { top: 31%; }
+.serra-lunar .artRight .cloud { top: 43%; }
+.serra-lunar .artLeft .peak { bottom: 6%; }
+.serra-lunar .artRight .peak { bottom: 3%; }
+/* Sereno: smaller twin ridges anchor an open, low horizon. The two-cloud
+   Serra master occupies the upper sky; one lunar current answers on the right. */
+.horizonte-sereno .bank { width: 49%; }
+.horizonte-sereno .right :global(.landscape-desktop) { transform: translateY(2%); }
+.horizonte-sereno .artBank { width: 29%; }
+.horizonte-sereno .artLeft .peak { bottom: 3%; }
+.horizonte-sereno .artRight .peak { bottom: 7%; }
+.horizonte-sereno .artLeft .cloud { top: 12%; }
+.horizonte-sereno .artRight .cloud { top: 27%; }
+.horizonte-sereno .artLeft .wind { top: 46%; }
+.horizonte-sereno .artRight .wind { top: 6%; }
+/* Serras: a higher alpine bank on the left, low twin ridge on the right.
+   Unequal scales and alternating kits make the diagonal deliberate. */
+.ceu-das-serras .left { width: 42%; }
+.ceu-das-serras .right { width: 49%; }
+.ceu-das-serras .right :global(.landscape-desktop) { transform: translateY(2%); }
+.ceu-das-serras .artLeft { width: 31%; }
+.ceu-das-serras .artRight { width: 28%; }
+.ceu-das-serras .artLeft .peak { bottom: 9%; }
+.ceu-das-serras .artRight .peak { bottom: 4%; }
+.ceu-das-serras .artLeft .cloud { top: 22%; }
+.ceu-das-serras .artRight .cloud { top: 33%; }
+.ceu-das-serras .artLeft .wind { top: 38%; }
+.ceu-das-serras .artRight .wind { top: 10%; }
+@media (max-width: 699px) {
+  .serra-lunar .artBank .wind,
+  .horizonte-sereno .artBank .wind,
+  .ceu-das-serras .artBank .wind { top: 60px; }
+  .serra-lunar .artLeft .cloud { top: calc(var(--scene-edge) - 65px); }
+  .serra-lunar .artRight .cloud { top: calc(var(--scene-edge) - 113px); }
+  .horizonte-sereno .artBank .cloud,
+  .ceu-das-serras .artBank .cloud { width: 40vw; }
+  .serra-lunar .artLeft .peak,
+  .ceu-das-serras .artLeft .peak { bottom: 2%; }
+  .serra-lunar .artRight .peak,
+  .ceu-das-serras .artRight .peak { bottom: 1%; }
+  .horizonte-sereno .artLeft .cloud { top: calc(var(--scene-edge) - 76px); }
+  .horizonte-sereno .artRight .cloud { top: calc(var(--scene-edge) - 110px); }
+  .horizonte-sereno .artLeft .peak { bottom: 1%; }
+  .horizonte-sereno .artRight .peak { bottom: 3%; }
+  .ceu-das-serras .artLeft { width: 32%; }
+  .ceu-das-serras .artRight { width: 29%; }
+  .ceu-das-serras .artLeft .cloud { top: calc(var(--scene-edge) - 68px); }
+  .ceu-das-serras .artRight .cloud { top: calc(var(--scene-edge) - 114px); }
+}
