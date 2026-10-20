@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import AnimatedScene from "../components/AnimatedScene";
 import Contador from "../components/Contador";
+import Landscape from "../components/Landscape";
+import landscapeStyles from "../components/Landscape.module.css";
+import ProposalNav from "../components/ProposalNav";
 
-export default function Home() {
+export default function Home({ landscape }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -28,7 +31,9 @@ export default function Home() {
   };
 
   return (
-    <div style={estiloContainer}>
+    <div style={estiloContainer} className={landscape ? `landscape-home ${landscapeStyles.home}` : undefined}>
+      {landscape && <Landscape variant={landscape} />}
+      {landscape && <ProposalNav variant={landscape} />}
       <button
         className="theme-toggle"
         type="button"

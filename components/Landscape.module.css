@@ -1,0 +1,215 @@
+.home {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  box-sizing: border-box;
+  padding-top: clamp(64px, 7vh, 84px) !important;
+  padding-bottom: 64px !important;
+}
+.home :global(.scene-wrapper),
+.home :global(center) {
+  position: relative;
+  z-index: 1;
+}
+.landscape {
+  --landscape-wash: #548d75;
+  --landscape-ink: #426d5a;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  color: var(--landscape-ink);
+  transition: color .6s ease;
+}
+:global(html[data-theme="dark"]) .landscape {
+  --landscape-wash: #83b09a;
+  --landscape-ink: #9ab7a5;
+}
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.layer svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.layer :global(.landscape-mobile) { display: none; }
+.bank {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 43%;
+  height: 100%;
+  mask-image: linear-gradient(90deg, #000 10%, #0009 48%, transparent 100%);
+}
+.layer svg.bank { width: 43%; }
+.left { left: 0; }
+.right { right: 0; transform: scaleX(-1); }
+.right :global(.landscape-desktop) { transform: translateY(-9%) scaleY(1.13); }
+.ridge0, .ridge1, .ridge2, .ridge3 { fill: var(--landscape-wash); transition: fill .6s ease; }
+.ridge0 { opacity: .075; }
+.ridge1 { opacity: .10; }
+.ridge2 { opacity: .12; }
+.ridge3 { opacity: .15; }
+.particles { color: var(--landscape-ink); opacity: .45; }
+.particles svg { fill: currentColor; }
+.particle { position: absolute; width: 12px; height: 18px; animation: drift var(--drift-duration) var(--drift-delay) ease-in-out infinite alternate; }
+.dot { width: 10px; height: 10px; opacity: .65; }
+.star svg { fill: none; stroke: currentColor; stroke-width: 1.4; }
+.cloud { animation: cloudDrift 28s ease-in-out infinite alternate; }
+.wind { animation: cloudDrift 32s -12s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(4px, -9px, 0); } }
+@keyframes cloudDrift { from { transform: translateX(-3px); } to { transform: translateX(8px); } }
+.brisa .left { width: 47%; }
+.brisa .right { width: 36%; top: 21%; height: 79%; }
+.brisa .right :global(.landscape-desktop) { transform: none; }
+.estelar .bank, .estelar svg.bank { width: 49%; }
+.estelar .right :global(.landscape-desktop) { transform: translateY(2%); }
+.navigation {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  color: var(--page-text);
+  font: 13px Georgia, serif;
+}
+.navigation a {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 6px;
+  opacity: .62;
+}
+.navigation a[aria-current], .navigation a:hover { opacity: 1; text-decoration: underline; text-decoration-thickness: 1px; }
+.navigation a:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; border-radius: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .landscape, .landscape * { animation: none !important; transition: none !important; }
+}
+@media (max-width: 699px) {
+  .home { padding-top: 78px !important; padding-bottom: 76px !important; }
+  .bank, .layer svg.bank { width: 46%; }
+  .layer :global(.landscape-desktop) { display: none; }
+  .layer :global(.landscape-mobile) { display: block; }
+  .ridge0 { opacity: .035; }
+  .ridge1 { opacity: .045; }
+  .ridge2 { opacity: .055; }
+  .ridge3 { opacity: .07; }
+  .particle:nth-child(3n) { display: none; }
+  .particle { width: 9px; height: 14px; }
+  .dot { width: 8px; height: 8px; }
+  .navigation { gap: 0; }
+  .navigation a { padding: 0 5px; }
+}
+
+/* Independent engraving banks leave a quiet central channel. The masters keep
+   their native viewBox proportions and are never cropped, stretched or masked. */
+.ornaments { opacity: .62; }
+:global(html[data-theme="dark"]) .ornaments { opacity: .58; }
+.artBank { position: absolute; top: 0; bottom: 0; width: 31%; }
+.artLeft { left: 1.5%; }
+.artRight { right: 1.5%; }
+.artBank svg { position: absolute; width: 100%; height: auto; overflow: visible; }
+.peak { bottom: 7%; }
+.cloud { top: 8%; }
+.wind { top: 45%; }
+.artRight .peak { bottom: 3%; }
+.artRight .cloud { top: 23%; animation-duration: 37s; animation-delay: -11s; }
+.artRight .wind { top: 51%; animation-duration: 41s; }
+/* Brisa follows an oblique valley: long clouds high on one bank, lower on the
+   other, with the engraved wind answering the gentle silhouette slopes. */
+.brisa .artLeft .peak { bottom: 18%; }
+.brisa .artRight .peak { bottom: 6%; }
+.brisa .artLeft .cloud { top: 15%; }
+.brisa .artRight .cloud { top: 32%; }
+.brisa .artLeft .wind { top: 42%; }
+.brisa .artRight .wind { top: 60%; }
+/* Estelar's moon is part of the original wind master, not a procedural sky arc. */
+.estelar .artLeft .peak { bottom: 5%; }
+.estelar .artRight .peak { bottom: 9%; }
+.estelar .artLeft .cloud { top: 35%; }
+.estelar .artRight .cloud { top: 46%; }
+.estelar .artLeft .wind { top: 9%; }
+.estelar .artRight .wind { top: 17%; }
+@media (max-width: 699px) {
+  .ornaments, :global(html[data-theme="dark"]) .ornaments { opacity: .76; }
+  .artBank { width: 31%; --scene-edge: calc(78px + min(100vw, 600px)); }
+  .artLeft { left: 2.5%; }
+  .artRight { right: 2.5%; }
+  .landscape .artLeft .peak { bottom: 2%; }
+  .landscape .artRight .peak { bottom: 1%; }
+  /* Larger scrolls sit beside the diamond's tapered foot, not behind its clouds
+     or the message. Position follows scene width rather than total page height. */
+  .artBank .cloud { width: 130%; }
+  .landscape .artLeft .cloud { top: calc(var(--scene-edge) - 60px); }
+  .landscape .artRight .cloud { right: 0; top: calc(var(--scene-edge) - 110px); }
+  .landscape .artLeft .wind { top: 60px; }
+  .landscape .artRight .wind { top: 65px; }
+  .brisa .artLeft .cloud { top: calc(var(--scene-edge) - 55px); }
+  .brisa .artRight .cloud { top: calc(var(--scene-edge) - 106px); }
+  .estelar .artLeft .cloud { top: calc(var(--scene-edge) - 65px); }
+  .estelar .artRight .cloud { top: calc(var(--scene-edge) - 112px); }
+}
+
+/* Hybrid studies only: same soft ink, three different spatial arrangements.
+   Lunar: high moon currents, low cloud ribbons and a deep alpine frame. */
+.serra-lunar .artLeft .wind { top: 8%; }
+.serra-lunar .artRight .wind { top: 15%; }
+.serra-lunar .artLeft .cloud { top: 31%; }
+.serra-lunar .artRight .cloud { top: 43%; }
+.serra-lunar .artLeft .peak { bottom: 6%; }
+.serra-lunar .artRight .peak { bottom: 3%; }
+/* Sereno: smaller twin ridges anchor an open, low horizon. The two-cloud
+   Serra master occupies the upper sky; one lunar current answers on the right. */
+.horizonte-sereno .bank { width: 49%; }
+.horizonte-sereno .right :global(.landscape-desktop) { transform: translateY(2%); }
+.horizonte-sereno .artBank { width: 29%; }
+.horizonte-sereno .artLeft .peak { bottom: 3%; }
+.horizonte-sereno .artRight .peak { bottom: 7%; }
+.horizonte-sereno .artLeft .cloud { top: 12%; }
+.horizonte-sereno .artRight .cloud { top: 27%; }
+.horizonte-sereno .artLeft .wind { top: 46%; }
+.horizonte-sereno .artRight .wind { top: 6%; }
+/* Serras: a higher alpine bank on the left, low twin ridge on the right.
+   Unequal scales and alternating kits make the diagonal deliberate. */
+.ceu-das-serras .left { width: 42%; }
+.ceu-das-serras .right { width: 49%; }
+.ceu-das-serras .right :global(.landscape-desktop) { transform: translateY(2%); }
+.ceu-das-serras .artLeft { width: 31%; }
+.ceu-das-serras .artRight { width: 28%; }
+.ceu-das-serras .artLeft .peak { bottom: 9%; }
+.ceu-das-serras .artRight .peak { bottom: 4%; }
+.ceu-das-serras .artLeft .cloud { top: 22%; }
+.ceu-das-serras .artRight .cloud { top: 33%; }
+.ceu-das-serras .artLeft .wind { top: 38%; }
+.ceu-das-serras .artRight .wind { top: 10%; }
+@media (max-width: 699px) {
+  .serra-lunar .artBank .wind,
+  .horizonte-sereno .artBank .wind,
+  .ceu-das-serras .artBank .wind { top: 60px; }
+  .serra-lunar .artLeft .cloud { top: calc(var(--scene-edge) - 65px); }
+  .serra-lunar .artRight .cloud { top: calc(var(--scene-edge) - 113px); }
+  .horizonte-sereno .artBank .cloud,
+  .ceu-das-serras .artBank .cloud { width: 40vw; }
+  .serra-lunar .artLeft .peak,
+  .ceu-das-serras .artLeft .peak { bottom: 2%; }
+  .serra-lunar .artRight .peak,
+  .ceu-das-serras .artRight .peak { bottom: 1%; }
+  .horizonte-sereno .artLeft .cloud { top: calc(var(--scene-edge) - 76px); }
+  .horizonte-sereno .artRight .cloud { top: calc(var(--scene-edge) - 110px); }
+  .horizonte-sereno .artLeft .peak { bottom: 1%; }
+  .horizonte-sereno .artRight .peak { bottom: 3%; }
+  .ceu-das-serras .artLeft { width: 32%; }
+  .ceu-das-serras .artRight { width: 29%; }
+  .ceu-das-serras .artLeft .cloud { top: calc(var(--scene-edge) - 68px); }
+  .ceu-das-serras .artRight .cloud { top: calc(var(--scene-edge) - 114px); }
+}
+
+/* Refinements inherit all Céu das Serras geometry above. Only the lower
+   engravings change: separate valley currents, never a repeated upper cloud. */
+.mist { bottom: 7%; animation: cloudDrift 46s -7s ease-in-out infinite alternate; }
+.artRight .mist { bottom: 4%; animation-duration: 53s; animation-delay: -19s; }
+@media (max-width: 699px) {
+  .artLeft .mist { bottom: 2%; }
+  .artRight .mist { bottom: 1%; }
+}
