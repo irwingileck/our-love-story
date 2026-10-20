@@ -18,3 +18,9 @@ export const hybrids = [
     { ridge: 'estelar', mountain: 'estelar', clouds: 'serra', wind: 'estelar' },
   ] },
 ];
+
+// Refinements inherit the selected composition, changing only its lower ornament.
+export const refinements = [
+  { slug: 'ceu-aberto', short: 'Aberto', title: 'Céu Aberto', base: 'ceu-das-serras', lower: 'none' },
+  { slug: 'brisa-das-serras', short: 'Brisa', title: 'Brisa das Serras', base: 'ceu-das-serras', lower: 'mist' },
+];

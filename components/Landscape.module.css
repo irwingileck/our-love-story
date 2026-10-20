@@ -204,3 +204,12 @@
   .ceu-das-serras .artLeft .cloud { top: calc(var(--scene-edge) - 68px); }
   .ceu-das-serras .artRight .cloud { top: calc(var(--scene-edge) - 114px); }
 }
+
+/* Refinements inherit all Céu das Serras geometry above. Only the lower
+   engravings change: separate valley currents, never a repeated upper cloud. */
+.mist { bottom: 7%; animation: cloudDrift 46s -7s ease-in-out infinite alternate; }
+.artRight .mist { bottom: 4%; animation-duration: 53s; animation-delay: -19s; }
+@media (max-width: 699px) {
+  .artLeft .mist { bottom: 2%; }
+  .artRight .mist { bottom: 1%; }
+}

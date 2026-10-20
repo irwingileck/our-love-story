@@ -2,10 +2,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import styles from './Landscape.module.css';
 
-import { originals, hybrids } from './proposals';
+import { originals, hybrids, refinements } from './proposals';
 
 export default function ProposalNav({ variant }) {
-  const proposals = hybrids.some(proposal => proposal.slug === variant) ? hybrids : originals;
+  const proposals = refinements.some(proposal => proposal.slug === variant) ? refinements : hybrids.some(proposal => proposal.slug === variant) ? hybrids : originals;
   const current = proposals.find((proposal) => proposal.slug === variant);
   return <>
     <Head>

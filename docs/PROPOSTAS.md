@@ -1,7 +1,8 @@
-# Estudos de paisagem da home — iterações 2 e 3
+# Estudos de paisagem da home — iterações 2, 3 e 4
 
-São seis composições **opt-in**, em duas famílias de três. A iteração 2 abaixo
-permanece disponível; a iteração 3 ao final combina somente Serra e Estelar.
+São oito composições **opt-in**: duas famílias de três, mais dois refinamentos de
+Céu das Serras. As iterações 2 e 3 permanecem disponíveis e visualmente intactas;
+a iteração 4 altera somente as gravuras inferiores da composição selecionada.
 `/` continua exibindo a home anterior, sem fundo
 novo nem navegação de propostas. Não existe seleção persistida, login ou mudança
 na mensagem. A escolha definitiva depende de revisão e aprovação antes de integrar.
@@ -226,3 +227,65 @@ Limites: Chromium e celular emulado, não Safari/aparelho físico. Testes não
 constituem aprovação artística do usuário. Os estudos continuam locais e
 **não commitados** nesta entrega: nenhum push, deploy, merge ou alteração de PR /
 produção. Revisão independente e escolha explícita continuam pendentes.
+
+## Iteração 4 — Céu Aberto e Brisa das Serras
+
+O usuário aprovou a composição de Céu das Serras, exceto os dois picos gravados
+nos cantos inferiores, marcados em azul na referência. **As montanhas suaves de
+fundo não foram removidas.** A rota selecionada original continua disponível.
+
+| Rota | Nome / link | Diferença exclusiva na base |
+| --- | --- | --- |
+| `/propostas/ceu-aberto` | Céu Aberto / Aberto | Não renderiza nenhuma das duas gravuras de pico, inclusive no DOM do breakpoint oculto; não adiciona ornamento substituto. |
+| `/propostas/brisa-das-serras` | Brisa das Serras / Brisa | Substitui os picos por duas gravuras novas de bruma e correntes de vale, horizontais, distintas e assimétricas. |
+
+Ambas herdam `base: 'ceu-das-serras'` em `components/proposals.js`: mesma geometria
+Serra à esquerda e Estelar à direita, mesmas nuvens Estelar/Serra, mesmos ventos
+Serra/Estelar, mesmas larguras e posições superiores, partículas e paleta. O CSS
+aprovado é herdado, não copiado. `Landscape.jsx` continua sendo um único renderer,
+com seleção mínima do ornamento inferior. Cena central, mensagem, contador,
+preferência de tema e animações originais não foram alterados.
+
+### Arte nova, sem reciclagem das nuvens superiores
+
+`assets/landscapes/refinements/mist-left.svg` e `mist-right.svg`: dois SVGs originais
+LLM, finalizados e inspecionados em scratch antes da integração. Cada viewBox é
+**600 × 150**, com contornos baixos orgânicos, pequenos redemoinhos e fitas de
+vento afiladas; não são três senóides, picos pontudos nem cópias do topo. O mestre
+esquerdo concentra a espiral à esquerda; o direito abre um curso mais longo antes
+da espiral à direita. Não se espelhou uma estampa única.
+
+Fundo transparente, raiz `fill="none"`, `currentColor`, `aria-hidden="true"`,
+`focusable="false"`; sem raster, script, referências externas ou preenchimento de
+fundo. Os nove mestres anteriores e toda a arte central permanecem byte a byte
+iguais. Proporção natural 4:1, sem esticar, recortar, mascarar ou reduzir opacidade
+para ocultar desenho. A opacidade é a mesma dos ornamentos aprovados.
+
+Os bancos mantêm as larguras aprovadas de 31%/28% no desktop e 32%/29% no celular.
+A bruma fica a 7%/4% da base no desktop e 2%/1% no celular: abaixo do contador,
+sem invadir o canal central. Animação lateral de 46/53 s reutiliza o movimento
+suave existente, com fases distintas; redução de movimento a desliga.
+
+As novas rotas mostram somente **Aberto / Brisa**, com nomes completos acessíveis.
+As famílias **Serra / Brisa / Céu** e **Lua / Vale / Serras** continuam sem mudança;
+nenhum link adicional foi empilhado junto ao botão de tema a 320 px.
+
+### Evidências e limites
+
+Cenário cumulativo T07 em `docs/TESTES.md`: baseline **24/24**, RED de Céu Aberto
+(rota ausente, 2 falhas) → **26/26**, RED de Brisa das Serras (rota ausente, 2
+falhas) → **28/28 dev**. Build status 0; **28/28 produção local**, auditorias de
+produção/completa com **zero vulnerabilidades conhecidas** na consulta.
+
+Pasta `$TMPDIR/our-love-story-refinements/`: oito PNGs finais
+`final-{ceu-aberto,brisa-das-serras}-{desktop,mobile}-{light,dark}.png`, todos
+inspecionados; `isolated-assets.png` registra a revisão anterior à integração.
+`pixel-comparison.json` comprova **28 comparações com zero pixels diferentes**
+para a home e as seis rotas antigas, desktop/mobile e ambos os temas, contra build
+independente do HEAD `463b338`. Frames sincronizados em 9 s, só contador dinâmico
+oculto nos dois lados; sem máscaras. `preservation.json` verifica os arquivos,
+arrays e prefixos CSS/configuração preservados. `capture.cjs` reproduz a coleta.
+
+Chromium 153 e celular emulado, não Safari/aparelho físico. Nenhum commit, push,
+deploy, merge ou escrita de PR/remoto; mudanças locais para revisão independente.
+A qualidade artística permanece sujeita à escolha do usuário.

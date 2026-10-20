@@ -7,8 +7,10 @@ import BrisaWind from '../assets/landscapes/brisa/wind.svg';
 import EstelarMountain from '../assets/landscapes/estelar/mountain.svg';
 import EstelarClouds from '../assets/landscapes/estelar/clouds.svg';
 import EstelarWind from '../assets/landscapes/estelar/wind.svg';
+import MistLeft from '../assets/landscapes/refinements/mist-left.svg';
+import MistRight from '../assets/landscapes/refinements/mist-right.svg';
 import styles from './Landscape.module.css';
-import { hybrids } from './proposals';
+import { hybrids, refinements } from './proposals';
 
 // Drawn in local side coordinates: the two banks never stretch across the message.
 const serraDesktop = [
@@ -58,12 +60,14 @@ const kits = {
 };
 
 export default function Landscape({ variant }) {
-  const hybrid = hybrids.find(proposal => proposal.slug === variant);
+  const refinement = refinements.find(proposal => proposal.slug === variant);
+  const composition = refinement?.base || variant;
+  const hybrid = hybrids.find(proposal => proposal.slug === composition);
   const banks = hybrid?.banks || ['left', 'right'].map(() => ({ ridge: variant, mountain: variant, clouds: variant, wind: variant }));
   const ridges = { serra: [serraDesktop, serraMobile], brisa: [brisaDesktop, brisaMobile], estelar: [estelarDesktop, estelarMobile] };
   const celestial = variant === 'estelar';
   return (
-    <div data-landscape={variant} className={`landscape ${styles.landscape} ${styles[variant] || ''}`} aria-hidden="true">
+    <div data-landscape={variant} className={`landscape ${styles.landscape} ${styles[composition] || ''}`} aria-hidden="true">
       <div data-layer="mountains" className={styles.layer}>
         {['left', 'right'].map((side, index) => <div data-ridge-bank={side} data-ridge-kit={banks[index].ridge} className={`${styles.bank} ${styles[side]}`} key={side}>
           <svg className="landscape-desktop" viewBox="0 0 500 1000" preserveAspectRatio="none" focusable="false">
@@ -80,8 +84,10 @@ export default function Landscape({ variant }) {
           const Mountain = kits[bank.mountain].Mountain;
           const Clouds = kits[bank.clouds].Clouds;
           const Wind = kits[bank.wind].Wind;
+          const Mist = side === 'left' ? MistLeft : MistRight;
           return <div data-art-bank={side} key={`${size}-${side}`} className={`landscape-${size} ${styles.artBank} ${side === 'left' ? styles.artLeft : styles.artRight}`}>
-            <Mountain data-artwork={`${bank.mountain}-mountain`} data-corner-mountain className={styles.peak} focusable="false" />
+            {!refinement && <Mountain data-artwork={`${bank.mountain}-mountain`} data-corner-mountain className={styles.peak} focusable="false" />}
+            {refinement?.lower === 'mist' && <Mist data-artwork={`valley-mist-${side}`} data-lower-mist className={styles.mist} aria-hidden="true" focusable="false" />}
             <Clouds data-artwork={`${bank.clouds}-clouds`} data-decorative-cloud className={styles.cloud} focusable="false" />
             <Wind data-artwork={`${bank.wind}-wind`} className={styles.wind} focusable="false" />
           </div>;

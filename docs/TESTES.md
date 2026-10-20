@@ -4,14 +4,15 @@ Esta lista deve crescer junto com o produto. **Toda nova funcionalidade deve
 acrescentar um cenário principal com ID sequencial (T03, T04, …), sua cobertura e
 comando de execução**, sem remover ou enfraquecer os cenários existentes. Detalhes
 adicionais de uma funcionalidade existente entram como subpassos (`test.step`) no
-seu cenário. Hoje existem **T01, T02, T03, T04, T05 e T06**; T01–T03 rodam em
-`desktop` e `mobile` (seis execuções). T04 e T05 são parametrizados nas três paisagens
-anteriores, e T06 nos três híbridos nesses mesmos projetos (mais seis cada),
-totalizando **24 execuções** por suíte. Os registros abaixo de 12/18 execuções
+seu cenário. Hoje existem **T01–T07**; T01–T03 rodam em `desktop` e `mobile`
+(seis execuções). T04/T05 são parametrizados nas três paisagens anteriores,
+T06 nos três híbridos (mais seis cada) e T07 nos dois refinamentos (mais quatro),
+totalizando **28 execuções** por suíte. Os registros abaixo de 12/18/24 execuções
 são históricos das respectivas entregas, preservados cumulativamente.
 
 Arquivos executáveis: `tests/theme.spec.js`, `tests/landscapes.spec.js`,
-`tests/artwork.spec.js` e `tests/hybrids.spec.js`. Configuração: `playwright.config.js`.
+`tests/artwork.spec.js`, `tests/hybrids.spec.js` e `tests/refinements.spec.js`.
+Configuração: `playwright.config.js`.
 O projeto mobile usa emulação Pixel 5 no Chromium, não um aparelho físico nem WebKit.
 
 ## T01 — Site abre e as animações existentes continuam funcionando
@@ -398,3 +399,95 @@ Verificação final:
 Limites: testes em Chromium/celular emulado, sem Safari ou aparelho físico;
 qualidade artística ainda depende da escolha do usuário. Sem commit, push,
 publicação, merge, alteração de PR ou escrita remota nesta entrega.
+
+## T07 — Dois refinamentos de Céu das Serras sem os picos inferiores
+
+Arquivo novo: `tests/refinements.spec.js`, parametrizado em `ceu-aberto` e
+`brisa-das-serras`, desktop/mobile: **quatro execuções novas**, **28 cumulativas**.
+T01–T06, seus arquivos e hashes de dependências/mestres permanecem intactos.
+
+Cobertura:
+
+1. Rota, título próprio e `noindex, nofollow`; dois bancos visíveis, três camadas
+   independentes cobrindo toda a home; SVGs não focáveis e fundo não interativo.
+2. Nenhuma instância `data-corner-mountain` no DOM, nem a versão oculta de outro
+   breakpoint. Céu Aberto não renderiza bruma; Brisa renderiza os dois mestres novos
+   em containers desktop/mobile separados.
+3. Caminhos reais de todas as silhuetas (oito por margem, desktop + mobile),
+   larguras e transformações coincidem com a rota Céu das Serras. Caminhos, origem,
+   largura e posição vertical das nuvens/ventos e partículas também coincidem.
+   Cada mestre superior é comparado integralmente após normalização SVGO.
+4. Os dois mestres de bruma têm >8 caminhos reais iguais ao SVG normalizado,
+   `fill="none"`, tinta `currentColor`, transparência, `aria-hidden`, sem imagem,
+   `rect`, `use`, script, recurso externo ou opacidade no mestre. Proporções
+   naturais verificadas na página; as duas gravuras são diferentes entre si.
+5. Partículas, nuvens, bruma nova e nuvem central realmente avançam `currentTime`
+   e mudam transformação; contador realmente avança. Redução de movimento zera
+   animações do fundo, não as originais. Durações de partículas >=12 s e variadas.
+6. Tema claro/escuro, reload/persistência e acesso ao storage bloqueado; tinta
+   acompanha o tema. Mensagem e contador preservados, sem erros de console/página.
+7. 1440 × 960, 393 × 851 e 320 × 640 nos dois temas: sem overflow, sem cruzar
+   retângulos de texto real, canal central livre, gravuras sem colisão com os
+   controles superiores e bruma dentro da página; navegação e tema sem colisão.
+   Links >=44 × 44 px, nomes acessíveis completos e navegação entre as duas rotas.
+8. `/` continua sem paisagem/navegação. T04–T06 continuam verificando as seis rotas
+   anteriores, inclusive as famílias de três links sem alteração.
+
+### TDD vertical e verificação local — refinamentos
+
+Evidências fora do Git: `$TMPDIR/our-love-story-refinements/`.
+
+| Etapa | Falha observada antes de implementar | Verde real |
+| --- | --- | --- |
+| Baseline recuperado | Tentativas iniciais falharam no ambiente, não contam como RED | `baseline.log`: **24/24**, 1,6 min |
+| Céu Aberto | `01-red.log`: **2 falhas**, rota ausente | `01-green.log`: **26/26**, 1,8 min |
+| Brisa das Serras | `02-red.log`: **2 falhas**, rota ausente | `02-green.log`: **28/28 dev**, 2,1 min |
+
+A arte foi concluída em scratch após o RED, renderizada e inspecionada isoladamente
+(`isolated-assets.png`, `review-assets.cjs`) antes de copiar os dois SVGs para o
+repositório. Não há dependência nova no projeto nem alteração no lockfile.
+
+- `dev-final.log`: **28/28 dev**, 2,1 min, incluindo caracterizações adicionais
+  de nomes/links exatos, ausência de colisão das gravuras com controles superiores
+  e bruma contida na página, sem nova mudança de implementação.
+- `build.log`: `NEXT_TELEMETRY_DISABLED=1 npm run build`, status 0; oito propostas
+  estáticas, além da home original.
+- `production-final.log`: `PLAYWRIGHT_TEST_PRODUCTION=1 npm test`, **28/28**, 1,6 min.
+- `audit.log`: `npm run security:audit`, **zero vulnerabilidades conhecidas** em
+  produção e árvore completa, status 0 nas duas consultas, sem supressões.
+- `preservation.json` / `verify-preservation.py`: seis arrays e markup dos planos
+  iguais, CSS e configuração das seis rotas antigas preservados como prefixo
+  literal, arte central/nove mestres/T01–T06/dependências/rotas antigas intactos.
+- `pixel-comparison.json`: **28 comparações**, **zero pixels diferentes**, de `/`
+  e todas as seis propostas antigas em desktop/mobile × claro/escuro, contra um
+  build independente do HEAD `463b338`. Animações pausadas em 9 s, somente contador
+  dinâmico oculto igualmente nos dois lados; nenhuma máscara de pixels.
+- `final-{ceu-aberto,brisa-das-serras}-{desktop,mobile}-{light,dark}.png`: **oito
+  capturas finais**, todas inspecionadas visualmente. Viewports 1440 × 960 e
+  393 × 851; página inteira 1440 × 960 / 393 × 858. `screenshots.json` inventaria;
+  `capture.cjs` / `capture.log` reproduzem captura e comparação.
+- `git diff --check`: status 0.
+
+Ambiente: Node 24.22.0/npm 11.19.1. O Chromium anterior e bibliotecas temporárias
+haviam sido limpos; Chromium padrão instalado também não iniciou por libs ausentes.
+Reposto apenas o bundle de aplicação `@sparticuz/chromium@153.0.0` em scratch,
+extração explícita de AL2023 e fontes com caminhos locais corrigidos. Chromium
+153.0.8010.0; sem sudo ou instalação de SO. Logs iniciais preservados em
+`baseline-standard.log`/`baseline-installed.log`, não considerados RED funcional.
+
+Comandos efetivos (bibliotecas/fontes locais já preparadas):
+
+```bash
+export FONTCONFIG_PATH="$TMPDIR/fonts"
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$TMPDIR/chromium"
+export LD_LIBRARY_PATH="$TMPDIR/al2023/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+npm test
+NEXT_TELEMETRY_DISABLED=1 npm run build
+PLAYWRIGHT_TEST_PRODUCTION=1 npm test
+npm run security:audit
+git diff --check
+```
+
+Limites: Chromium e celular emulado; não Safari nem dispositivo físico. Testes
+não substituem aprovação artística. Nenhum commit, push, deploy, merge ou escrita
+em PR/remoto nesta entrega; revisão independente e prévia ficam com o agente pai.
